@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{{ task.title }} — Chop Money</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+<header class="dashboard-nav">
+
+    <a href="/dashboard" class="brand">
+
+        <div class="brand-icon">
+            <i class="bi bi-wallet2"></i>
+        </div>
+
+        <span>Chop<span>Money</span></span>
+
+    </a>
+
+    <a href="/dashboard" class="login-btn">
+        Dashboard
+    </a>
+
+</header>
+
+
+<main class="auth-page">
+
+    <div class="task-detail-card">
+
+        <div class="task-detail-icon">
+            <i class="bi bi-list-task"></i>
+        </div>
+
+        <span class="task-label">AVAILABLE TASK</span>
+
+        <h1>{{ task.title }}</h1>
+
+        <div class="task-detail-reward">
+
+            <span>Task Reward</span>
+
+            <strong>
+                ₦{{ "{:,.2f}".format(task.reward) }}
+            </strong>
+
+        </div>
+
+
+        <div class="task-instructions">
+
+            <h3>Task Instructions</h3>
+
+            <p>
+                {{ task.description }}
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ task.task_link }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="primary-btn task-open-link">
+
+            Open Task Link
+
+            <i class="bi bi-box-arrow-up-right"></i>
+
+        </a>
+
+
+        {% if existing %}
+
+            <div class="submission-notice {{ existing.status }}">
+
+                <i class="bi bi-info-circle"></i>
+
+                <div>
+
+                    {% if existing.status == "pending" %}
+
+                        <strong>Submission pending</strong>
+
+                        <p>
+                            Your submission is waiting for admin approval.
+                        </p>
+
+                    {% elif existing.status == "approved" %}
+
+                        <strong>Task approved</strong>
+
+                        <p>
+                            Your reward has been added to your balance.
+                        </p>
+
+                    {% elif existing.status == "rejected" %}
+
+                        <strong>Task rejected</strong>
+
+                        <p>
+                            {{ existing.rejection_reason or "Your submission was not approved." }}
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% if existing.status == "rejected" %}
+
+                <form method="POST" class="task-submit-form">
+
+                    <label>
+                        Resubmit Task / New Proof
+                    </label>
+
+                    <textarea
+                        name="note"
+                        rows="5"
+                        placeholder="Correct the issue and explain how you completed the task..."
+                        required></textarea>
+
+                    <button
+                        type="submit"
+                        class="primary-btn auth-submit">
+
+                        Resubmit Task
+
+                        <i class="bi bi-arrow-repeat"></i>
+
+                    </button>
+
+                </form>
+
+            {% endif %}
+
+        {% else %}
+
+            <form method="POST" class="task-submit-form">
+
+                <label>
+                    Completion Note / Proof
+                </label>
+
+                <textarea
+                    name="note"
+                    rows="5"
+                    placeholder="Tell us how you completed the task..."
+                    required></textarea>
+
+                <button
+                    type="submit"
+                    class="primary-btn auth-submit">
+
+                    Submit Task
+
+                    <i class="bi bi-send"></i>
+
+                </button>
+
+            </form>
+
+        {% endif %}
+
+
+
+        <a href="/dashboard" class="back-link">
+            <i class="bi bi-arrow-left"></i>
+            Back to dashboard
+        </a>
+
+    </div>
+
+</main>
+
+</body>
+</html>

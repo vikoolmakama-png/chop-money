@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Submissions — Chop Money</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        <div class="brand-icon">
+            <i class="bi bi-wallet2"></i>
+        </div>
+        <span>Chop<span>Money</span></span>
+    </div>
+
+    <a href="/dashboard" class="login-btn">
+        <i class="bi bi-arrow-left"></i> Dashboard
+    </a>
+</header>
+
+<main>
+
+    <section class="dashboard-section page-section">
+
+        <div class="dashboard-section-heading">
+            <span>YOUR SUBMISSIONS</span>
+            <h2>Task history</h2>
+        </div>
+
+        {% if submissions %}
+
+        <div class="submission-list">
+
+            {% for submission in submissions %}
+
+            <div class="dashboard-action-card">
+
+                <div class="dashboard-action-icon">
+                    <i class="bi bi-file-earmark-check"></i>
+                </div>
+
+                <div class="dashboard-action-content">
+
+                    <strong>{{ submission.task.title }}</strong>
+
+                    <span>
+                        Submitted
+                        {{ submission.created_at.strftime("%d %b %Y, %I:%M %p") }}
+                    </span>
+
+                </div>
+
+                <span class="status {{ submission.status }}">
+                    {% if submission.status == "pending" %}
+                        <i class="bi bi-hourglass-split"></i>
+                    {% elif submission.status == "approved" %}
+                        <i class="bi bi-check-circle-fill"></i>
+                    {% else %}
+                        <i class="bi bi-x-circle-fill"></i>
+                    {% endif %}
+
+                    {{ submission.status|capitalize }}
+                </span>
+
+                {% if submission.status == "rejected" and submission.rejection_reason %}
+                    <div class="submission-rejection-reason">
+                        <strong>Rejection reason</strong>
+                        <p>{{ submission.rejection_reason }}</p>
+                    </div>
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+            <i class="bi bi-file-earmark-text"></i>
+            <h3>No submissions yet</h3>
+            <p>Complete an available task and submit it.</p>
+
+            <a href="/tasks" class="primary-btn">
+                View Available Tasks
+                <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account — Chop Money</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <a href="/" class="brand">
+        <div class="brand-icon">
+            <i class="bi bi-wallet2"></i>
+        </div>
+
+        <span>Chop<span>Money</span></span>
+    </a>
+
+    <a href="/login" class="login-btn">
+        Sign In
+    </a>
+
+</header>
+
+
+<main>
+
+<section class="auth-page">
+
+    <div class="auth-card">
+
+        <div class="auth-icon">
+            <i class="bi bi-person-plus-fill"></i>
+        </div>
+
+        <div class="auth-heading">
+            <span>JOIN CHOP MONEY</span>
+            <h1>Create your account</h1>
+            <p>Start completing tasks and earning rewards.</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+
+            <label>Username</label>
+            <div class="input-wrap">
+                <i class="bi bi-person"></i>
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Choose a username"
+                    required>
+            </div>
+
+            <label>Email</label>
+            <div class="input-wrap">
+                <i class="bi bi-envelope"></i>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="you@example.com"
+                    required>
+            </div>
+
+            <label>Password</label>
+            <div class="input-wrap">
+                <i class="bi bi-lock"></i>
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="At least 6 characters"
+                    required>
+            </div>
+
+            <label>Confirm Password</label>
+            <div class="input-wrap">
+                <i class="bi bi-shield-check"></i>
+                <input
+                    type="password"
+                    name="confirm_password"
+                    placeholder="Repeat your password"
+                    required>
+            </div>
+
+            <label>Referral Code <small>(optional)</small></label>
+            <div class="input-wrap">
+                <i class="bi bi-people"></i>
+                <input
+                    type="text"
+                    name="referral_code"
+                    value="{{ referral_code }}"
+                    placeholder="CHOP-XXXXXX">
+            </div>
+
+            <button class="primary-btn auth-submit" type="submit">
+                Create Account
+                <i class="bi bi-arrow-right"></i>
+            </button>
+
+        </form>
+
+        <p class="auth-bottom">
+            Already have an account?
+            <a href="/login">Sign in</a>
+        </p>
+
+    </div>
+
+</section>
+
+</main>
+
+</body>
+</html>

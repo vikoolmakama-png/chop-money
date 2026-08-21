@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard — Chop Money</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<header class="dashboard-nav">
+
+    <a href="/" class="brand">
+        <div class="brand-icon">
+            <i class="bi bi-wallet2"></i>
+        </div>
+
+        <span>Chop<span>Money</span></span>
+    </a>
+
+    <div class="dashboard-user">
+
+        <span>
+            Hi, {{ current_user.username }}
+        </span>
+
+        <a href="/logout" class="logout-btn">
+            <i class="bi bi-box-arrow-right"></i>
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="dashboard-container">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+
+    <!-- WELCOME -->
+
+    <section class="dashboard-welcome">
+
+        <span>YOUR DASHBOARD</span>
+
+        <h1>
+            Welcome back, {{ current_user.username }} 👋
+        </h1>
+
+        <p>
+            Complete available tasks and turn your time into earnings.
+        </p>
+
+    </section>
+
+
+    <!-- BALANCES -->
+
+    <section class="balance-grid">
+
+        <div class="balance-card main-balance">
+
+            <div class="balance-top">
+                <span>Total Balance</span>
+
+                <div class="balance-icon">
+                    <i class="bi bi-wallet-fill"></i>
+                </div>
+            </div>
+
+            <strong>
+                ₦{{ "{:,.2f}".format(current_user.total_balance) }}
+            </strong>
+
+            <small>
+                Your total available earnings
+            </small>
+
+        </div>
+
+
+        <div class="balance-card">
+
+            <div class="balance-top">
+
+                <span>Task Balance</span>
+
+                <div class="mini-icon blue">
+                    <i class="bi bi-list-task"></i>
+                </div>
+
+            </div>
+
+            <strong>
+                ₦{{ "{:,.2f}".format(current_user.task_balance or 0) }}
+            </strong>
+
+            <small>
+                Approved task earnings
+            </small>
+
+        </div>
+
+
+        <div class="balance-card">
+
+            <div class="balance-top">
+
+                <span>Referral Balance</span>
+
+                <div class="mini-icon purple">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+
+            </div>
+
+            <strong>
+                ₦{{ "{:,.2f}".format(current_user.referral_balance or 0) }}
+            </strong>
+
+            <small>
+                Referral rewards
+            </small>
+
+        </div>
+
+    </section>
+
+
+    <!-- QUICK ACTIONS -->
+
+    <section class="quick-actions">
+
+        <a href="/withdraw" class="quick-action">
+
+            <i class="bi bi-cash-stack"></i>
+
+            <div>
+                <strong>Withdraw</strong>
+                <small>Minimum withdrawal ₦500</small>
+            </div>
+
+        </a>
+
+
+        <a href="/referrals" class="quick-action">
+
+            <i class="bi bi-gift"></i>
+
+            <div>
+                <strong>Refer & Earn</strong>
+                <small>Earn ₦50 per eligible referral</small>
+            </div>
+
+        </a>
+
+
+        <a href="/airtime" class="quick-action">
+
+            <i class="bi bi-phone"></i>
+
+            <div>
+                <strong>Airtime</strong>
+                <small>Purchase from ₦50</small>
+            </div>
+
+        </a>
+
+    </section>
+
+
+    <!-- TASK NAVIGATION -->
+
+    <!-- TASK ACTION CARDS -->
+    <section class="dashboard-action-cards task-choice-cards">
+
+        <a href="/tasks" class="dashboard-action-card">
+            <div class="dashboard-action-icon">
+                <i class="bi bi-list-check"></i>
+            </div>
+
+            <div class="dashboard-action-content">
+                <strong>Available Tasks</strong>
+                <span>View and perform available tasks</span>
+            </div>
+
+            <i class="bi bi-chevron-right dashboard-action-arrow"></i>
+        </a>
+
+        <a href="/submissions" class="dashboard-action-card">
+            <div class="dashboard-action-icon">
+                <i class="bi bi-file-earmark-check"></i>
+            </div>
+
+            <div class="dashboard-action-content">
+                <strong>Your Submissions</strong>
+                <span>View your task submission history</span>
+            </div>
+
+            <i class="bi bi-chevron-right dashboard-action-arrow"></i>
+        </a>
+
+    </section>
+
+
+
+    <!-- REFERRAL -->
+
+    <section class="referral-mini">
+
+        <div class="referral-mini-icon">
+            <i class="bi bi-gift-fill"></i>
+        </div>
+
+        <div>
+
+            <span>REFERRAL PROGRAM</span>
+
+            <h2>
+                Earn ₦50 per eligible referral
+            </h2>
+
+            <p>
+                Your referral earns ₦50 after completing
+                2 approved tasks.
+            </p>
+
+        </div>
+
+        <a href="/referrals" class="white-btn">
+            View Referrals
+            <i class="bi bi-arrow-right"></i>
+        </a>
+
+    </section>
+
+</main>
+
+</body>
+</html>

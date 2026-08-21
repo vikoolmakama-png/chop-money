@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Chop Money — Earn. Complete. Withdraw.</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<header class="navbar">
+    <div class="brand">
+        <div class="brand-icon">
+            <i class="bi bi-wallet2"></i>
+        </div>
+        <span>Chop<span>Money</span></span>
+    </div>
+
+    <a href="/login" class="login-btn">
+        Login
+    </a>
+</header>
+
+
+<main>
+
+    <section class="hero">
+
+        <div class="hero-badge">
+            <i class="bi bi-stars"></i>
+            Earn money by completing simple tasks
+        </div>
+
+        <h1>
+            Turn simple tasks<br>
+            into <span>real earnings.</span>
+        </h1>
+
+        <p class="hero-text">
+            Complete available tasks, submit your note,
+            earn money and invite friends to earn referral rewards.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="/register" class="primary-btn">
+                Get Started
+                <i class="bi bi-arrow-right"></i>
+            </a>
+
+            <a href="/login" class="secondary-btn">
+                Sign In
+            </a>
+        </div>
+
+        <div class="trust-row">
+            <div>
+                <i class="bi bi-check-circle-fill"></i>
+                Simple Tasks
+            </div>
+
+            <div>
+                <i class="bi bi-check-circle-fill"></i>
+                Fast Approval
+            </div>
+
+            <div>
+                <i class="bi bi-check-circle-fill"></i>
+                Referral Rewards
+            </div>
+        </div>
+
+    </section>
+
+
+    <section class="stats">
+
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="bi bi-list-task"></i>
+            </div>
+            <div>
+                <strong>Easy Tasks</strong>
+                <small>Complete simple tasks</small>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="bi bi-cash-stack"></i>
+            </div>
+            <div>
+                <strong>₦500</strong>
+                <small>Minimum task withdrawal</small>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon purple">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div>
+                <strong>₦35</strong>
+                <small>Per eligible referral</small>
+            </div>
+        </div>
+
+    </section>
+
+
+    <section class="how">
+
+        <div class="section-heading">
+            <span>HOW IT WORKS</span>
+            <h2>Start earning in 3 simple steps</h2>
+        </div>
+
+        <div class="steps">
+
+            <div class="step">
+                <div class="step-number">01</div>
+                <i class="bi bi-person-plus-fill"></i>
+                <h3>Create Account</h3>
+                <p>Register your free Chop Money account.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">02</div>
+                <i class="bi bi-check2-square"></i>
+                <h3>Complete Tasks</h3>
+                <p>Choose a task and submit your note.</p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">03</div>
+                <i class="bi bi-wallet-fill"></i>
+                <h3>Get Paid</h3>
+                <p>Approved earnings go into your balance.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="referral-box">
+
+        <div class="referral-icon">
+            <i class="bi bi-gift-fill"></i>
+        </div>
+
+        <div>
+            <span>REFERRAL PROGRAM</span>
+            <h2>Invite friends. Earn ₦35.</h2>
+            <p>
+                Your referral earns ₦35 after completing
+                2 approved tasks.
+            </p>
+        </div>
+
+        <a href="/register" class="white-btn">
+            Join Now
+            <i class="bi bi-arrow-right"></i>
+        </a>
+
+    </section>
+
+</main>
+
+
+<footer>
+    <div class="brand footer-brand">
+        <div class="brand-icon">
+            <i class="bi bi-wallet2"></i>
+        </div>
+        <span>Chop<span>Money</span></span>
+    </div>
+
+    <p>© 2026 Chop Money. Earn smart. Earn simple.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Referrals — Chop Money</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+<header class="dashboard-nav">
+
+    <a href="/dashboard" class="brand">
+
+        <div class="brand-icon">
+            <i class="bi bi-wallet2"></i>
+        </div>
+
+        <span>Chop<span>Money</span></span>
+
+    </a>
+
+    <a href="/dashboard" class="login-btn">
+        Dashboard
+    </a>
+
+</header>
+
+
+<main class="dashboard-container">
+
+    <section class="referral-page-hero">
+
+        <div class="referral-icon">
+            <i class="bi bi-gift-fill"></i>
+        </div>
+
+        <span>REFERRAL PROGRAM</span>
+
+        <h1>Invite friends. Earn ₦50.</h1>
+
+        <p>
+            Your referral earns you ₦50 after completing
+            2 approved tasks.
+        </p>
+
+    </section>
+
+
+    <section class="referral-code-card">
+
+        <span>Your Referral Code</span>
+
+        <strong>
+            {{ current_user.referral_code }}
+        </strong>
+
+        <p>
+            Share this code when your friends register.
+        </p>
+
+    </section>
+
+
+    <section class="dashboard-section">
+
+        <div class="dashboard-section-heading">
+
+            <div>
+
+                <span>YOUR REFERRALS</span>
+
+                <h2>Referral activity</h2>
+
+            </div>
+
+        </div>
+
+
+        {% if referrals %}
+
+        <div class="activity-card">
+
+            {% for referral in referrals %}
+
+            <div class="activity-row">
+
+                <div class="activity-info">
+
+                    <div class="activity-icon">
+                        <i class="bi bi-person"></i>
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            {{ referral.referred.username }}
+                        </strong>
+
+                        <small>
+                            Approved tasks:
+                            {{ referral.tasks_completed }}
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                {% if referral.reward_paid %}
+
+                    <span class="status approved">
+                        ₦50 Earned
+                    </span>
+
+                {% else %}
+
+                    <span class="status pending">
+                        In Progress
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-card">
+
+            <i class="bi bi-people"></i>
+
+            <h3>No referrals yet</h3>
+
+            <p>
+                Share your referral code to start earning.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</main>
+
+</body>
+</html>

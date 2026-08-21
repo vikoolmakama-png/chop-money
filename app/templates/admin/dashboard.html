@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard — Chop Money</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            <i class="bi bi-wallet2"></i>
+        </div>
+
+        <span>Chop<span>Money</span></span>
+
+    </div>
+
+    <a href="/logout" class="login-btn">
+        Logout
+    </a>
+
+</header>
+
+
+<main class="admin-page">
+
+    <div class="admin-heading">
+
+        <div>
+            <span>ADMINISTRATION</span>
+            <h1>Admin Dashboard</h1>
+            <p>Manage users, tasks, submissions, withdrawals and airtime.</p>
+        </div>
+
+        <a href="/admin/task/create" class="primary-btn">
+            <i class="bi bi-plus-lg"></i>
+            Create Task
+        </a>
+
+    </div>
+
+
+    <!-- SUMMARY -->
+
+    <section class="admin-stats">
+
+        <div class="admin-stat">
+            <i class="bi bi-people-fill"></i>
+            <strong>{{ users|length }}</strong>
+            <small>Total Users</small>
+        </div>
+
+        <div class="admin-stat">
+            <i class="bi bi-list-task"></i>
+            <strong>{{ tasks|length }}</strong>
+            <small>Total Tasks</small>
+        </div>
+
+        <div class="admin-stat">
+            <i class="bi bi-file-earmark-check"></i>
+            <strong>{{ submissions|length }}</strong>
+            <small>Submissions</small>
+        </div>
+
+        <div class="admin-stat">
+            <i class="bi bi-phone"></i>
+            <strong>{{ airtime_requests|length }}</strong>
+            <small>Airtime Requests</small>
+        </div>
+
+    </section>
+
+
+    <!-- AIRTIME -->
+
+    <section class="admin-section">
+
+        <div class="admin-section-heading">
+
+            <div>
+                <span>AIRTIME PURCHASES</span>
+                <h2>Manual Airtime Requests</h2>
+            </div>
+
+        </div>
+
+
+        <div class="admin-airtime-card">
+
+            {% if airtime_requests %}
+
+                {% for purchase in airtime_requests %}
+
+                <div class="admin-airtime-row">
+
+                    <div class="admin-airtime-info">
+
+                        <strong>
+                            {{ purchase.user.username }}
+                            — ₦{{ "{:,.2f}".format(purchase.amount) }}
+                        </strong>
+
+                        <small>
+                            {{ purchase.network }}
+                            · {{ purchase.phone_number }}
+                            · {{ purchase.created_at.strftime("%d %b %Y, %I:%M %p") }}
+                        </small>
+
+                    </div>
+
+
+                    <div>
+
+                        {% if purchase.status == "pending" %}
+
+                        <div class="admin-airtime-actions">
+
+                            <a
+                                href="/admin/airtime/{{ purchase.id }}/approve"
+                                class="admin-approve">
+
+                                <i class="bi bi-check-lg"></i>
+                                Approve
+
+                            </a>
+
+
+                            <form
+                                method="POST"
+                                action="/admin/airtime/{{ purchase.id }}/reject"
+                                style="display:inline;">
+
+                                <input
+                                    type="hidden"
+                                    name="reason"
+                                    value="Airtime request rejected by admin.">
+
+                                <button
+                                    type="submit"
+                                    class="admin-reject">
+
+                                    <i class="bi bi-x-lg"></i>
+                                    Reject
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                        {% elif purchase.status == "approved" %}
+
+                            <span class="status approved">
+                                <i class="bi bi-check-circle-fill"></i>
+                                Approved
+                            </span>
+
+                        {% else %}
+
+                            <span class="status rejected">
+                                <i class="bi bi-x-circle-fill"></i>
+                                Rejected
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty-activity">
+
+                    <i class="bi bi-phone"></i>
+
+                    <h3>No airtime requests</h3>
+
+                    <p>
+                        New manual airtime requests will appear here.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- TASKS -->
+
+    <section class="admin-section">
+
+        <div class="admin-section-heading">
+
+            <div>
+                <span>TASK MANAGEMENT</span>
+                <h2>Tasks</h2>
+            </div>
+
+            <a href="/admin/task/create" class="secondary-btn">
+                <i class="bi bi-plus-lg"></i>
+                Create Task
+            </a>
+
+        </div>
+
+
+        <div class="admin-list-card">
+
+            {% for task in tasks %}
+
+            <div class="admin-list-row">
+
+                <div>
+                    <strong>{{ task.title }}</strong>
+
+                    <small>
+                        ₦{{ "{:,.2f}".format(task.reward) }}
+                        · {{ task.workers_remaining }} / {{ task.workers_needed }} workers remaining
+                    </small>
+                </div>
+
+                <div>
+
+                    {% if task.active %}
+
+                        <span class="status approved">
+                            Active
+                        </span>
+
+                    {% else %}
+
+                        <span class="status rejected">
+                            Disabled
+                        </span>
+
+                    {% endif %}
+
+                    <a
+                        href="/admin/task/{{ task.id }}/edit"
+                        class="admin-small-button">
+
+                        <i class="bi bi-pencil"></i>
+                        Edit
+
+                    </a>
+
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+
+                        <a
+                            href="/admin/task/{{ task.id }}/edit"
+                            class="admin-small-button">
+
+                            <i class="bi bi-pencil"></i>
+                            Edit
+
+                        </a>
+
+                        <a
+                            href="/admin/task/{{ task.id }}/toggle"
+                            class="admin-small-button">
+
+                            {% if task.active %}
+                                Disable
+                            {% else %}
+                                Enable
+                            {% endif %}
+
+                        </a>
+
+                        <form
+                            method="POST"
+                            action="/admin/task/{{ task.id }}/delete"
+                            style="display:inline;"
+                            onsubmit="return confirm('Delete this task permanently?');">
+
+                            <button
+                                type="submit"
+                                class="admin-small-button">
+
+                                <i class="bi bi-trash"></i>
+                                Delete
+
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                    <form
+                        method="POST"
+                        action="/admin/task/{{ task.id }}/delete"
+                        style="display:inline;"
+                        onsubmit="return confirm('Delete this task and its submissions?');">
+
+                        <button
+                            type="submit"
+                            class="admin-reject">
+
+                            <i class="bi bi-trash"></i>
+                            Delete
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="empty-activity">
+                <i class="bi bi-list-task"></i>
+                <h3>No tasks yet</h3>
+                <p>Create your first task.</p>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- SUBMISSIONS -->
+
+    <section class="admin-section">
+
+        <div class="admin-section-heading">
+
+            <div>
+                <span>TASK SUBMISSIONS</span>
+                <h2>User Submissions</h2>
+            </div>
+
+        </div>
+
+
+        <div class="admin-list-card">
+
+            {% for submission in submissions %}
+
+            <div class="admin-list-row">
+
+                <div>
+
+                    <strong>
+                        {{ submission.user.username }}
+                        — {{ submission.task.title }}
+                    </strong>
+
+                    <small>
+                        {{ submission.note }}
+                    </small>
+
+                </div>
+
+
+                <div>
+
+                    {% if submission.status == "pending" %}
+
+                    <a
+                        href="/admin/submission/{{ submission.id }}/approve"
+                        class="admin-approve">
+
+                        Approve
+
+                    </a>
+
+                    <form
+                        method="POST"
+                        action="/admin/submission/{{ submission.id }}/reject"
+                        style="display:inline;">
+
+                        <input
+                            type="text"
+                            name="reason"
+                            placeholder="Reason for rejection"
+                            required>
+
+                        <button
+                            type="submit"
+                            class="admin-reject">
+
+                            <i class="bi bi-x-lg"></i>
+                            Reject
+
+                        </button>
+
+                    </form>
+
+                    {% else %}
+
+                    <span class="status {{ submission.status }}">
+                        {{ submission.status|capitalize }}
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="empty-activity">
+
+                <i class="bi bi-file-earmark-text"></i>
+
+                <h3>No submissions</h3>
+
+                <p>User task submissions will appear here.</p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- WITHDRAWALS -->
+
+    <section class="admin-section">
+
+        <div class="admin-section-heading">
+
+            <div>
+                <span>WITHDRAWALS</span>
+                <h2>Withdrawal Requests</h2>
+            </div>
+
+        </div>
+
+
+        <div class="admin-list-card">
+
+            {% for withdrawal in withdrawals %}
+
+            <div class="admin-list-row">
+
+                <div>
+
+                    <strong>
+                        {{ withdrawal.user.username }}
+                        — ₦{{ "{:,.2f}".format(withdrawal.amount) }}
+                    </strong>
+
+                    <small>
+                        {{ withdrawal.balance_type|capitalize }}
+                        · {{ withdrawal.bank_name }}
+                        · {{ withdrawal.account_number }}
+                        · {{ withdrawal.account_name }}
+                    </small>
+
+                </div>
+
+
+                <div>
+
+                    {% if withdrawal.status == "pending" %}
+
+                    <a
+                        href="/admin/withdrawal/{{ withdrawal.id }}/approve"
+                        class="admin-approve">
+
+                        Approve
+
+                    </a>
+
+                    <form
+                        method="POST"
+                        action="/admin/withdrawal/{{ withdrawal.id }}/reject"
+                        style="display:inline;">
+
+                        <input
+                            type="hidden"
+                            name="reason"
+                            value="Withdrawal rejected by admin.">
+
+                        <button
+                            type="submit"
+                            class="admin-reject">
+
+                            Reject
+
+                        </button>
+
+                    </form>
+
+                    {% else %}
+
+                    <span class="status {{ withdrawal.status }}">
+                        {{ withdrawal.status|capitalize }}
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="empty-activity">
+
+                <i class="bi bi-bank"></i>
+
+                <h3>No withdrawals</h3>
+
+                <p>Withdrawal requests will appear here.</p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <div class="brand footer-brand">
+
+        <div class="brand-icon">
+            <i class="bi bi-wallet2"></i>
+        </div>
+
+        <span>Chop<span>Money</span></span>
+
+    </div>
+
+    <p>
+        © 2026 Chop Money Admin
+    </p>
+
+</footer>
+
+</body>
+</html>
