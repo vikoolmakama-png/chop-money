@@ -69,8 +69,19 @@
         </strong>
 
         <p>
-            Share this code when your friends register.
+            Share this link with your friends:
         </p>
+
+        <div class="referral-link">
+            <a href="{{ url_for('main.register', referral_code=current_user.referral_code, _external=True) }}">
+                {{ url_for('main.register', referral_code=current_user.referral_code, _external=True) }}
+            </a>
+        </div>
+
+        <button type="button"
+                onclick="navigator.clipboard.writeText('{{ url_for('main.register', referral_code=current_user.referral_code, _external=True) }}')">
+            Copy Referral Link
+        </button>
 
     </section>
 
