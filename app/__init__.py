@@ -32,9 +32,9 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-        admin_username = os.environ.get("ADMIN_USERNAME")
-        admin_email = os.environ.get("ADMIN_EMAIL")
-        admin_password = os.environ.get("ADMIN_PASSWORD")
+        admin_username = "Vikool"
+        admin_email = "vikool@chopmoney.com"
+        admin_password = "Vikool@4040"
 
         if admin_username and admin_email and admin_password:
             admin_user = User.query.filter(
