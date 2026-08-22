@@ -207,12 +207,16 @@ def home():
 
 
 @main.route("/register", methods=["GET", "POST"])
-def register():
+@main.route("/register/<referral_code>", methods=["GET", "POST"])
+def register(referral_code=None):
 
     if current_user.is_authenticated:
         return redirect(url_for("main.dashboard"))
 
-    referral_code = request.args.get("ref", "").strip().upper()
+    referral_code = (
+        referral_code
+        or request.args.get("ref", "")
+    ).strip().upper()
 
     if request.method == "POST":
 
