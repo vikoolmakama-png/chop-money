@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 
 from app import db
-from app.models import User, Task, TaskSubmission, Referral, Withdrawal, AirtimePurchase
+from app.models import User, Task, TaskSubmission, Referral, Withdrawal, AirtimePurchase, Deposit
 
 
 admin = Blueprint("admin", __name__, url_prefix="/admin")
@@ -51,13 +51,18 @@ def dashboard():
         AirtimePurchase.created_at.desc()
     ).all()
 
+    deposits = Deposit.query.order_by(
+        Deposit.created_at.desc()
+    ).all()
+
     return render_template(
         "admin/dashboard.html",
         users=users,
         tasks=tasks,
         submissions=submissions,
         withdrawals=withdrawals,
-        airtime_requests=airtime_requests
+        airtime_requests=airtime_requests,
+        deposits=deposits
     )
 
 
@@ -277,19 +282,64 @@ def reject_submission(submission_id):
         "Submission was not approved."
     ).strip()
 
-    # Release the worker slot because this submission was rejected.
-    task = submission.task
-    task.workers_remaining = min(
-        task.workers_remaining + 1,
-        task.workers_needed
-    )
-
-    if task.workers_remaining > 0:
-        task.active = True
-
     db.session.commit()
 
     flash("Submission rejected.", "success")
+
+    return redirect(url_for("admin.dashboard"))
+
+
+
+
+@admin.route("/deposit/<int:deposit_id>/approve")
+def approve_deposit(deposit_id):
+
+    deposit = Deposit.query.get_or_404(deposit_id)
+
+    if deposit.status != "pending":
+        flash("This deposit has already been processed.", "error")
+        return redirect(url_for("admin.dashboard"))
+
+    deposit.status = "approved"
+
+    user = deposit.user
+    user.wallet_balance = (
+        user.wallet_balance or 0
+    ) + deposit.amount
+
+    db.session.commit()
+
+    flash(
+        f"Deposit of ₦{deposit.amount:,.2f} approved and added to wallet.",
+        "success"
+    )
+
+    return redirect(url_for("admin.dashboard"))
+
+
+@admin.route(
+    "/deposit/<int:deposit_id>/reject",
+    methods=["POST"]
+)
+def reject_deposit(deposit_id):
+
+    deposit = Deposit.query.get_or_404(deposit_id)
+
+    if deposit.status != "pending":
+        flash("This deposit has already been processed.", "error")
+        return redirect(url_for("admin.dashboard"))
+
+    reason = request.form.get(
+        "reason",
+        "Deposit rejected by admin."
+    ).strip()
+
+    deposit.status = "rejected"
+    deposit.rejection_reason = reason
+
+    db.session.commit()
+
+    flash("Deposit rejected.", "success")
 
     return redirect(url_for("admin.dashboard"))
 

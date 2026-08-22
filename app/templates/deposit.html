@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposit — Chop Money</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        .deposit-page {
+            min-height: 100vh;
+            background: #f4f7fb;
+            padding: 24px 14px 40px;
+        }
+
+        .deposit-wrapper {
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .deposit-card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 22px;
+            box-shadow: 0 12px 35px rgba(16, 35, 63, .08);
+        }
+
+        .deposit-heading {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .deposit-heading h1 {
+            margin: 0 0 6px;
+            font-size: 27px;
+            color: #10233f;
+        }
+
+        .deposit-heading p {
+            margin: 0;
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .wallet-box {
+            background: #eef5ff;
+            border-radius: 17px;
+            padding: 17px 19px;
+            margin-bottom: 18px;
+        }
+
+        .wallet-box span {
+            display: block;
+            color: #3275cf;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .wallet-box strong {
+            color: #10233f;
+            font-size: 27px;
+        }
+
+        .account-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+
+        .account-box h2 {
+            margin: 0 0 17px;
+            font-size: 18px;
+            color: #10233f;
+        }
+
+        .account-row {
+            padding: 10px 0;
+            border-bottom: 1px solid #e7edf4;
+        }
+
+        .account-row:last-child {
+            border-bottom: 0;
+        }
+
+        .account-row small {
+            display: block;
+            color: #7a8797;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        .account-row strong {
+            color: #172b4d;
+            font-size: 16px;
+        }
+
+        .account-number {
+            color: #1769d1 !important;
+            font-size: 23px !important;
+            letter-spacing: 1px;
+        }
+
+        .minimum-box {
+            margin-top: 13px;
+            padding: 12px 14px;
+            background: #fff8e6;
+            border: 1px solid #f1dda0;
+            border-radius: 12px;
+            color: #695315;
+            font-size: 13px;
+        }
+
+        .instruction-box {
+            background: #f0f7ff;
+            border: 1px solid #d7e9ff;
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 21px;
+            color: #42566d;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .instruction-box strong {
+            color: #17395f;
+        }
+
+        .deposit-form label {
+            display: block;
+            margin-bottom: 7px;
+            color: #263b59;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .deposit-form input,
+        .deposit-form select {
+            width: 100%;
+            height: 50px;
+            box-sizing: border-box;
+            border: 1px solid #d6dee9;
+            border-radius: 12px;
+            background: #fff;
+            padding: 0 14px;
+            margin-bottom: 16px;
+            color: #172b4d;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .deposit-form input:focus,
+        .deposit-form select:focus {
+            border-color: #2878dc;
+            box-shadow: 0 0 0 3px rgba(40,120,220,.10);
+        }
+
+        .deposit-submit {
+            width: 100%;
+            height: 52px;
+            border: 0;
+            border-radius: 13px;
+            background: #1769d1;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            margin-top: 3px;
+            box-shadow: 0 7px 18px rgba(23,105,209,.20);
+        }
+
+        .back-dashboard {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+            color: #2878dc;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 480px) {
+            .deposit-page {
+                padding: 12px 10px 30px;
+            }
+
+            .deposit-card {
+                padding: 18px 15px;
+                border-radius: 21px;
+            }
+
+            .deposit-heading h1 {
+                font-size: 25px;
+            }
+
+            .account-number {
+                font-size: 21px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="dashboard-nav">
+    <a href="/dashboard" class="brand">
+        <div class="brand-icon">₦</div>
+        <span>Chop<span>Money</span></span>
+    </a>
+
+    <a href="/dashboard" class="login-btn">
+        Dashboard
+    </a>
+</header>
+
+<main class="deposit-page">
+
+    <div class="deposit-wrapper">
+
+        <div class="deposit-card">
+
+            <div class="deposit-heading">
+                <h1>Deposit Money</h1>
+                <p>Add money to your Chop Money wallet</p>
+            </div>
+
+            <div class="wallet-box">
+                <span>Current Wallet Balance</span>
+                <strong>
+                    ₦{{ "{:,.2f}".format(current_user.wallet_balance or 0) }}
+                </strong>
+            </div>
+
+            <div class="account-box">
+
+                <h2>Where to Send Payment</h2>
+
+                <div class="account-row">
+                    <small>Account Name</small>
+                    <strong>Laraba Elisha Makama</strong>
+                </div>
+
+                <div class="account-row">
+                    <small>Bank</small>
+                    <strong>PalmPay</strong>
+                </div>
+
+                <div class="account-row">
+                    <small>Account Number</small>
+                    <strong class="account-number">
+                        9034960760
+                    </strong>
+                </div>
+
+                <div class="minimum-box">
+                    <strong>Minimum Deposit: ₦200</strong>
+                </div>
+
+            </div>
+
+            <div class="instruction-box">
+                <strong>Before submitting:</strong><br>
+                Transfer the money to the PalmPay account above.
+                Then enter the details of the account you used to
+                make the transfer and your transaction reference.
+                Your deposit will be reviewed before your wallet is credited.
+            </div>
+
+            <form method="POST" class="deposit-form">
+
+                <label for="sender_name">
+                    Sender's Full Name
+                </label>
+
+                <input
+                    id="sender_name"
+                    type="text"
+                    name="sender_name"
+                    placeholder="Name on the sending account"
+                    maxlength="150"
+                    required
+                >
+
+                <label for="sender_bank">
+                    Bank Used to Send Money
+                </label>
+
+                <input
+                    id="sender_bank"
+                    type="text"
+                    name="sender_bank"
+                    placeholder="e.g. Opay, PalmPay, GTBank"
+                    maxlength="100"
+                    required
+                >
+
+                <label for="amount">
+                    Deposit Amount (₦)
+                </label>
+
+                <input
+                    id="amount"
+                    type="number"
+                    name="amount"
+                    min="200"
+                    step="0.01"
+                    placeholder="200"
+                    required
+                >
+
+                <label for="reference">
+                    Transaction Reference
+                </label>
+
+                <input
+                    id="reference"
+                    type="text"
+                    name="reference"
+                    placeholder="Enter transaction reference"
+                    maxlength="150"
+                    required
+                >
+
+                <button type="submit" class="deposit-submit">
+                    Submit Deposit
+                </button>
+
+            </form>
+
+            <a href="/dashboard" class="back-dashboard">
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Create Task — Chop Money</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f7f9fc;
+        }
+
+        .create-task-page {
+            width: 100%;
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 28px 18px 50px;
+        }
+
+        .create-task-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 30px 26px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .create-task-header {
+            margin-bottom: 25px;
+        }
+
+        .create-task-header h1 {
+            margin: 0 0 8px;
+            font-size: 30px;
+            color: #14213d;
+        }
+
+        .create-task-header p {
+            margin: 0;
+            color: #667085;
+            font-size: 15px;
+        }
+
+        .wallet-box {
+            background: #eef4ff;
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .wallet-box span {
+            color: #667085;
+            font-size: 14px;
+        }
+
+        .wallet-box strong {
+            color: #14213d;
+            font-size: 21px;
+        }
+
+        .field {
+            margin-bottom: 21px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #172b4d;
+        }
+
+        .field input,
+        .field textarea,
+        .field select {
+            width: 100%;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 14px 15px;
+            font-size: 16px;
+            background: #ffffff;
+            color: #172b4d;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .field select {
+            min-height: 52px;
+            appearance: auto;
+        }
+
+        .field input {
+            min-height: 50px;
+        }
+
+        .field textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .field input:focus,
+        .field textarea:focus,
+        .field select:focus {
+            border-color: #1f6fff;
+            box-shadow: 0 0 0 3px rgba(31, 111, 255, 0.10);
+        }
+
+        .worker-summary {
+            margin: 8px 0 25px;
+            padding: 22px;
+            background: #f4f7fb;
+            border-radius: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 8px 0;
+        }
+
+        .summary-row span {
+            color: #344054;
+            font-size: 16px;
+        }
+
+        .summary-row strong {
+            color: #172b4d;
+            font-size: 18px;
+        }
+
+        .summary-total {
+            border-top: 1px solid #d8dee8;
+            margin-top: 10px;
+            padding-top: 17px;
+        }
+
+        .summary-total span {
+            font-weight: 700;
+            font-size: 19px;
+            color: #172b4d;
+        }
+
+        .summary-total strong {
+            font-size: 24px;
+            color: #172b4d;
+        }
+
+        .summary-note {
+            display: block;
+            margin-top: 14px;
+            color: #667085;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .create-task-btn {
+            width: 100%;
+            min-height: 58px;
+            border: 0;
+            border-radius: 15px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .create-task-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 600px) {
+            .create-task-page {
+                padding: 18px 12px 35px;
+            }
+
+            .create-task-card {
+                padding: 25px 18px;
+                border-radius: 20px;
+            }
+
+            .create-task-header h1 {
+                font-size: 26px;
+            }
+
+            .wallet-box {
+                padding: 16px;
+            }
+
+            .wallet-box strong {
+                font-size: 18px;
+            }
+
+            .worker-summary {
+                padding: 19px 16px;
+            }
+
+            .summary-row span {
+                font-size: 15px;
+            }
+
+            .summary-row strong {
+                font-size: 17px;
+            }
+
+            .summary-total span {
+                font-size: 18px;
+            }
+
+            .summary-total strong {
+                font-size: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="dashboard-nav">
+    <a href="/dashboard" class="brand">
+        <div class="brand-icon">₦</div>
+        <span>Chop<span>Money</span></span>
+    </a>
+
+    <a href="/dashboard" class="login-btn">
+        Dashboard
+    </a>
+</header>
+
+<main class="create-task-page">
+
+    <div class="create-task-card">
+
+        <div class="create-task-header">
+            <h1>Create a Task</h1>
+            <p>Fund your task from your wallet.</p>
+        </div>
+
+        <div class="wallet-box">
+            <span>Wallet Balance</span>
+
+            <strong>
+                ₦{{ "{:,.2f}".format(current_user.wallet_balance or 0) }}
+            </strong>
+        </div>
+
+        <form method="POST" id="createTaskForm">
+
+            <div class="field">
+                <label for="task_type">Task Type</label>
+
+                <select id="task_type" name="task_type" required>
+                    <option value="">Select task type</option>
+
+                    <option>Telegram Bot</option>
+                    <option>Share post</option>
+                    <option>Sponsor post</option>
+                    <option>X followers</option>
+                    <option>Spotify</option>
+                    <option>WhatsApp Group / Telegram</option>
+                    <option>Custom Task</option>
+                    <option>App Install and Register</option>
+                    <option>YouTube Subscribers</option>
+                    <option>Facebook Followers</option>
+                    <option>Website Signups</option>
+                    <option>Instagram Followers</option>
+                    <option>TikTok Followers</option>
+                    <option>Facebook, TikTok, Instagram and YouTube Likes</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="title">Task Title</label>
+
+                <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label for="description">Description</label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="5"
+                    required
+                ></textarea>
+            </div>
+
+            <div class="field">
+                <label for="task_link">Task Link</label>
+
+                <input
+                    type="url"
+                    id="task_link"
+                    name="task_link"
+                    placeholder="https://..."
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label for="workers_needed">Number of Workers</label>
+
+                <input
+                    type="number"
+                    id="workers_needed"
+                    name="workers_needed"
+                    min="5"
+                    value="5"
+                    step="1"
+                    required
+                >
+            </div>
+
+            <div class="worker-summary">
+
+                <div class="summary-row">
+                    <span>Amount per Worker</span>
+
+                    <strong>
+                        ₦<span id="amount_per_worker">0.00</span>
+                    </strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Number of Workers</span>
+
+                    <strong id="workers_display">5</strong>
+                </div>
+
+                <div class="summary-row summary-total">
+                    <span>Total Cost</span>
+
+                    <strong>
+                        ₦<span id="total_cost">0.00</span>
+                    </strong>
+                </div>
+
+                <small class="summary-note">
+                    This total amount will be deducted from your wallet.
+                </small>
+
+            </div>
+
+            <button
+                type="submit"
+                class="primary-btn create-task-btn"
+                id="createTaskBtn"
+            >
+                Create &amp; Fund Task
+            </button>
+
+        </form>
+
+    </div>
+
+</main>
+
+<script>
+const prices = {
+    "Telegram Bot": {reward: 30, fee: 10},
+    "Share post": {reward: 15, fee: 10},
+    "Sponsor post": {reward: 25, fee: 10},
+    "X followers": {reward: 10, fee: 4},
+    "Spotify": {reward: 7, fee: 5},
+    "WhatsApp Group / Telegram": {reward: 8, fee: 4},
+    "Custom Task": {reward: 60, fee: 25},
+    "App Install and Register": {reward: 70, fee: 30},
+    "YouTube Subscribers": {reward: 10, fee: 7},
+    "Facebook Followers": {reward: 8, fee: 4},
+    "Website Signups": {reward: 20, fee: 10},
+    "Instagram Followers": {reward: 7, fee: 5},
+    "TikTok Followers": {reward: 7, fee: 5},
+    "Facebook, TikTok, Instagram and YouTube Likes": {reward: 5, fee: 5}
+};
+
+function money(value) {
+    return Number(value).toLocaleString("en-NG", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+function calculateTotal() {
+    const type = document.getElementById("task_type").value;
+
+    let workers = parseInt(
+        document.getElementById("workers_needed").value,
+        10
+    );
+
+    if (!workers || workers < 5) {
+        workers = 5;
+    }
+
+    const price = prices[type];
+
+    const amountPerWorker = price
+        ? price.reward + price.fee
+        : 0;
+
+    const total = amountPerWorker * workers;
+
+    document.getElementById("amount_per_worker").textContent =
+        money(amountPerWorker);
+
+    document.getElementById("workers_display").textContent =
+        workers;
+
+    document.getElementById("total_cost").textContent =
+        money(total);
+}
+
+document.getElementById("task_type").addEventListener(
+    "change",
+    calculateTotal
+);
+
+document.getElementById("workers_needed").addEventListener(
+    "input",
+    calculateTotal
+);
+
+document.getElementById("createTaskForm").addEventListener(
+    "submit",
+    function(event) {
+        const workers = parseInt(
+            document.getElementById("workers_needed").value,
+            10
+        );
+
+        if (!workers || workers < 5) {
+            event.preventDefault();
+
+            alert("You must create a task for at least 5 workers.");
+
+            document.getElementById("workers_needed").value = 5;
+
+            calculateTotal();
+        }
+    }
+);
+
+calculateTotal();
+</script>
+
+</body>
+</html>

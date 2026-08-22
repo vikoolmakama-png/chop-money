@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Tasks — Chop Money</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<header class="dashboard-nav">
+
+    <a href="/dashboard" class="brand">
+        <div class="brand-icon">
+            <i class="bi bi-wallet2"></i>
+        </div>
+
+        <span>Chop<span>Money</span></span>
+    </a>
+
+    <div class="dashboard-user">
+        <a href="/dashboard" class="login-btn">
+            Dashboard
+        </a>
+    </div>
+
+</header>
+
+
+<main class="dashboard-container">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+
+    <section class="dashboard-welcome">
+        <span>TASK MANAGEMENT</span>
+
+        <h1>
+            My Tasks
+        </h1>
+
+        <p>
+            View your tasks and review worker submissions.
+        </p>
+
+        <div style="margin-top:20px;">
+            <a href="/create-task" class="primary-btn">
+                <i class="bi bi-plus-lg"></i>
+                Create a Task
+            </a>
+        </div>
+    </section>
+
+
+    {% if not tasks %}
+
+        <div class="auth-card">
+            <h2>You haven't created any tasks yet.</h2>
+
+            <p>
+                Create a task and workers will be able to submit
+                their completion proof here.
+            </p>
+
+            <a href="/create-task" class="primary-btn">
+                Create a Task
+            </a>
+        </div>
+
+    {% else %}
+
+        {% for task in tasks %}
+
+            <section class="auth-card" style="margin-bottom: 25px;">
+
+                <div style="display:flex; justify-content:space-between; gap:15px; flex-wrap:wrap;">
+
+                    <div>
+                        <h2>{{ task.title }}</h2>
+
+                        <p>
+                            {{ task.description }}
+                        </p>
+
+                        <p>
+                            <strong>Reward:</strong>
+                            ₦{{ "{:,.2f}".format(task.reward or 0) }}
+                        </p>
+
+                        <p>
+                            <strong>Workers remaining:</strong>
+                            {{ task.workers_remaining }}
+                        </p>
+                    </div>
+
+                    <div>
+                        {% if task.active %}
+                            <span class="flash success">Active</span>
+                        {% else %}
+                            <span class="flash">Closed</span>
+                        {% endif %}
+                    </div>
+
+                </div>
+
+
+                <hr>
+
+
+                <h3>
+                    Submissions
+                </h3>
+
+
+                {% set pending_submissions = task.submissions | selectattr("status", "equalto", "pending") | list %}
+
+                {% if pending_submissions %}
+
+                    {% for submission in pending_submissions %}
+
+                        <div style="
+                            border:1px solid #ddd;
+                            border-radius:12px;
+                            padding:16px;
+                            margin-top:15px;
+                        ">
+
+                            <p>
+                                <strong>Worker:</strong>
+                                {{ submission.user.username }}
+                            </p>
+
+                            <p>
+                                <strong>Status:</strong>
+
+                                {% if submission.status == "pending" %}
+                                    <span>Pending review</span>
+
+                                {% elif submission.status == "approved" %}
+                                    <span>Approved</span>
+
+                                {% elif submission.status == "rejected" %}
+                                    <span>Rejected</span>
+                                {% endif %}
+                            </p>
+
+                            <p>
+                                <strong>Completion note:</strong>
+                            </p>
+
+                            <div style="
+                                background:#f7f7f7;
+                                padding:12px;
+                                border-radius:8px;
+                                margin-bottom:15px;
+                            ">
+                                {{ submission.note }}
+                            </div>
+
+                            {% if submission.screenshot_filename %}
+                                <div style="margin-bottom:15px;">
+                                    <strong>Screenshot Proof:</strong>
+
+                                    <div style="
+                                        margin-top:10px;
+                                        border:1px solid #ddd;
+                                        border-radius:10px;
+                                        padding:8px;
+                                        background:#fff;
+                                    ">
+                                        <a
+                                            href="{{ url_for('static', filename='uploads/submissions/' + submission.screenshot_filename) }}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <img
+                                                src="{{ url_for('static', filename='uploads/submissions/' + submission.screenshot_filename) }}"
+                                                alt="Worker task completion screenshot"
+                                                style="
+                                                    display:block;
+                                                    width:100%;
+                                                    max-width:600px;
+                                                    height:auto;
+                                                    border-radius:8px;
+                                                "
+                                            >
+                                        </a>
+                                    </div>
+
+                                    <small>
+                                        Tap the screenshot to view it full size.
+                                    </small>
+                                </div>
+                            {% else %}
+                                <p style="color:#888;">
+                                    No screenshot was attached to this submission.
+                                </p>
+                            {% endif %}
+
+                            <div style="
+                                background:#f7f7f7;
+                                padding:12px;
+                                border-radius:8px;
+                                margin-bottom:15px;
+                            ">
+                                {{ submission.note }}
+                            </div>
+
+
+                            {% if submission.status == "pending" %}
+
+                                <form method="POST"
+                                      action="{{ url_for(
+                                          'main.review_task_submission',
+                                          task_id=task.id,
+                                          submission_id=submission.id
+                                      ) }}"
+                                      style="margin-bottom:10px;">
+
+                                    <button
+                                        type="submit"
+                                        name="action"
+                                        value="approve"
+                                        class="primary-btn"
+                                    >
+                                        <i class="bi bi-check-circle"></i>
+                                        Approve Submission
+                                    </button>
+
+                                </form>
+
+
+                                <form method="POST"
+                                      action="{{ url_for(
+                                          'main.review_task_submission',
+                                          task_id=task.id,
+                                          submission_id=submission.id
+                                      ) }}">
+
+                                    <input
+                                        type="hidden"
+                                        name="action"
+                                        value="reject"
+                                    >
+
+                                    <label>
+                                        Rejection Reason
+                                    </label>
+
+                                    <textarea
+                                        name="rejection_reason"
+                                        rows="3"
+                                        placeholder="Explain why this submission is being rejected..."
+                                        required
+                                        style="width:100%; margin:8px 0 12px;"
+                                    ></textarea>
+
+                                    <button
+                                        type="submit"
+                                        class="primary-btn"
+                                    >
+                                        <i class="bi bi-x-circle"></i>
+                                        Reject Submission
+                                    </button>
+
+                                </form>
+
+                            {% elif submission.status == "rejected" %}
+
+                                <div style="
+                                    background:#fff3f3;
+                                    border:1px solid #f0caca;
+                                    border-radius:8px;
+                                    padding:12px;
+                                ">
+                                    <strong>Rejection reason:</strong>
+
+                                    <p>
+                                        {{ submission.rejection_reason }}
+                                    </p>
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p>
+                        No workers have submitted this task yet.
+                    </p>
+
+                {% endif %}
+
+            </section>
+
+        {% endfor %}
+
+    {% endif %}
+
+</main>
+
+</body>
+</html>

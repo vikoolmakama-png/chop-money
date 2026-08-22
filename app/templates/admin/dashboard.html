@@ -85,7 +85,128 @@
     </section>
 
 
-    <!-- AIRTIME -->
+    
+
+<!-- DEPOSIT REQUESTS -->
+<section class="admin-section">
+
+    <div class="admin-section-heading">
+        <div>
+            <span>DEPOSIT REQUESTS</span>
+            <h2>Wallet Deposits</h2>
+        </div>
+    </div>
+
+    <div class="admin-airtime-card">
+
+        {% if deposits %}
+
+            {% for deposit in deposits %}
+
+                <div class="admin-airtime-row">
+
+                    <div class="admin-airtime-info">
+
+                        <strong>
+                            {{ deposit.user.username }}
+                            — ₦{{ "{:,.2f}".format(deposit.amount) }}
+                        </strong>
+
+                        <small>
+                            Sender:
+                            {{ deposit.sender_name or "Not provided" }}
+                            · Bank:
+                            {{ deposit.sender_bank or "Not provided" }}
+                            · Ref:
+                            {{ deposit.reference }}
+                            ·
+                            {{ deposit.created_at.strftime("%d %b %Y, %I:%M %p") }}
+                        </small>
+
+                    </div>
+
+                    <div>
+
+                        {% if deposit.status == "pending" %}
+
+                            <div class="admin-airtime-actions">
+
+                                <a
+                                    href="/admin/deposit/{{ deposit.id }}/approve"
+                                    class="admin-approve"
+                                >
+                                    <i class="bi bi-check-lg"></i>
+                                    Approve
+                                </a>
+
+                                <form
+                                    method="POST"
+                                    action="/admin/deposit/{{ deposit.id }}/reject"
+                                    style="display:inline;"
+                                >
+
+                                    <input
+                                        type="text"
+                                        name="reason"
+                                        placeholder="Reason for rejection"
+                                        required
+                                        style="padding:8px; margin-right:5px;"
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="admin-reject"
+                                    >
+                                        <i class="bi bi-x-lg"></i>
+                                        Reject
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        {% elif deposit.status == "approved" %}
+
+                            <span class="status approved">
+                                <i class="bi bi-check-circle-fill"></i>
+                                Approved
+                            </span>
+
+                        {% else %}
+
+                            <span class="status rejected">
+                                <i class="bi bi-x-circle-fill"></i>
+                                Rejected
+                            </span>
+
+                            {% if deposit.rejection_reason %}
+                                <small>
+                                    Reason: {{ deposit.rejection_reason }}
+                                </small>
+                            {% endif %}
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p style="padding:20px;">
+                No deposit requests yet.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+<!-- AIRTIME -->
 
     <section class="admin-section">
 
@@ -286,23 +407,6 @@
                             {% endif %}
 
                         </a>
-
-                        <form
-                            method="POST"
-                            action="/admin/task/{{ task.id }}/delete"
-                            style="display:inline;"
-                            onsubmit="return confirm('Delete this task permanently?');">
-
-                            <button
-                                type="submit"
-                                class="admin-small-button">
-
-                                <i class="bi bi-trash"></i>
-                                Delete
-
-                            </button>
-
-                        </form>
 
                     </div>
 

@@ -14,6 +14,7 @@ class User(UserMixin, db.Model):
 
     task_balance = db.Column(db.Float, default=0)
     referral_balance = db.Column(db.Float, default=0)
+    wallet_balance = db.Column(db.Float, default=0)
 
     referral_code = db.Column(db.String(30), unique=True, nullable=False)
 
@@ -34,6 +35,12 @@ class User(UserMixin, db.Model):
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
+    owner_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=True
+    )
+
     title = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text, nullable=False)
 
@@ -42,11 +49,21 @@ class Task(db.Model):
 
     reward = db.Column(db.Float, nullable=False)
 
+    # Task pricing
+    task_type = db.Column(db.String(100), nullable=False, default="Custom Task")
+    total_cost = db.Column(db.Float, nullable=False, default=0)
+    website_fee = db.Column(db.Float, nullable=False, default=0)
+
     workers_needed = db.Column(db.Integer, nullable=False, default=1)
     workers_remaining = db.Column(db.Integer, nullable=False, default=1)
 
     active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    owner = db.relationship(
+        "User",
+        backref="created_tasks"
+    )
 
 
 class TaskSubmission(db.Model):
@@ -56,6 +73,7 @@ class TaskSubmission(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey("task.id"), nullable=False)
 
     note = db.Column(db.Text, nullable=False)
+    screenshot_filename = db.Column(db.String(255), nullable=True)
 
     status = db.Column(db.String(20), default="pending")
     rejection_reason = db.Column(db.Text)
@@ -139,3 +157,43 @@ class AirtimePurchase(db.Model):
         "User",
         backref="airtime_purchases"
     )
+
+
+class Deposit(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False
+    )
+
+    amount = db.Column(db.Float, nullable=False)
+
+    reference = db.Column(
+        db.String(150),
+        nullable=False
+    )
+
+    sender_name = db.Column(db.String(150), nullable=False)
+    sender_bank = db.Column(db.String(100), nullable=False)
+
+    status = db.Column(
+        db.String(20),
+        default="pending",
+        nullable=False
+    )
+
+    rejection_reason = db.Column(db.Text)
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    user = db.relationship(
+        "User",
+        backref="deposits"
+    )
+
+

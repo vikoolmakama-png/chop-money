@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.py[cod]
+*.db
+instance/
+.env
+*.backup
+*.backup2
+*.before_screenshot
+*.before_referral_reward
+app/static/uploads/

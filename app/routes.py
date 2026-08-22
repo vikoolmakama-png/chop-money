@@ -2,6 +2,8 @@ from urllib.parse import urlparse
 import secrets
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from werkzeug.utils import secure_filename
+import os
 from flask_login import (
     login_user,
     logout_user,
@@ -10,13 +12,13 @@ from flask_login import (
 )
 
 from app import db
-from app.models import User, Task, TaskSubmission, Referral, Withdrawal, AirtimePurchase, AirtimePurchase
+from app.models import User, Task, TaskSubmission, Referral, Withdrawal, AirtimePurchase, AirtimePurchase, Deposit
 
 
 main = Blueprint("main", __name__)
 
 
-TASK_MIN_WITHDRAWAL = 500
+TASK_MIN_WITHDRAWAL = 350
 REFERRAL_REWARD = 50
 
 
@@ -35,6 +37,170 @@ def generate_referral_code():
             return code
 
 
+@main.route("/deposit", methods=["GET", "POST"])
+@login_required
+def deposit():
+
+    if request.method == "POST":
+
+        sender_name = request.form.get(
+            "sender_name", ""
+        ).strip()
+
+        sender_bank = request.form.get(
+            "sender_bank", ""
+        ).strip()
+
+        amount_text = request.form.get(
+            "amount", ""
+        ).strip()
+
+        reference = request.form.get(
+            "reference", ""
+        ).strip()
+
+        if not sender_name:
+            flash("Enter the sender's full name.", "error")
+            return redirect(url_for("main.deposit"))
+
+        if not sender_bank:
+            flash("Enter the bank used to send the money.", "error")
+            return redirect(url_for("main.deposit"))
+
+        if not reference:
+            flash("Enter the transaction reference.", "error")
+            return redirect(url_for("main.deposit"))
+
+        try:
+            amount = float(amount_text)
+        except (ValueError, TypeError):
+            flash("Enter a valid deposit amount.", "error")
+            return redirect(url_for("main.deposit"))
+
+        if amount < 200:
+            flash("Minimum deposit is ₦200.", "error")
+            return redirect(url_for("main.deposit"))
+
+        deposit = Deposit(
+            user_id=current_user.id,
+            amount=amount,
+            sender_name=sender_name,
+            sender_bank=sender_bank,
+            reference=reference,
+            status="pending"
+        )
+
+        db.session.add(deposit)
+        db.session.commit()
+
+        flash(
+            "Deposit submitted successfully. It is waiting for admin verification.",
+            "success"
+        )
+
+        return redirect(url_for("main.dashboard"))
+
+    return render_template("deposit.html")
+
+
+@main.route("/create-task", methods=["GET", "POST"])
+@login_required
+def create_task():
+
+    TASK_PRICES = {
+        "Telegram Bot": {"reward": 30, "fee": 10},
+        "Share post": {"reward": 15, "fee": 10},
+        "Sponsor post": {"reward": 25, "fee": 10},
+        "X followers": {"reward": 10, "fee": 4},
+        "Spotify": {"reward": 7, "fee": 5},
+        "WhatsApp Group / Telegram": {"reward": 8, "fee": 4},
+        "Custom Task": {"reward": 60, "fee": 25},
+        "App Install and Register": {"reward": 70, "fee": 30},
+        "YouTube Subscribers": {"reward": 10, "fee": 7},
+        "Facebook Followers": {"reward": 8, "fee": 4},
+        "Website Signups": {"reward": 20, "fee": 10},
+        "Instagram Followers": {"reward": 7, "fee": 5},
+        "TikTok Followers": {"reward": 7, "fee": 5},
+        "Facebook, TikTok, Instagram and YouTube Likes": {"reward": 5, "fee": 5},
+    }
+
+    if request.method == "POST":
+
+        title = request.form.get("title", "").strip()
+        description = request.form.get("description", "").strip()
+        task_link = request.form.get("task_link", "").strip()
+        task_type = request.form.get("task_type", "").strip()
+        workers_text = request.form.get("workers_needed", "").strip()
+
+        if task_type not in TASK_PRICES:
+            flash("Please select a valid task type.", "error")
+            return redirect(url_for("main.create_task"))
+
+        try:
+            workers_needed = int(workers_text)
+        except (ValueError, TypeError):
+            flash("Enter a valid number of workers.", "error")
+            return redirect(url_for("main.create_task"))
+
+        if not title or not description or not task_link:
+            flash("Complete all task fields.", "error")
+            return redirect(url_for("main.create_task"))
+
+        if not task_link.startswith(("http://", "https://")):
+            flash("Task link must begin with http:// or https://", "error")
+            return redirect(url_for("main.create_task"))
+
+        if workers_needed < 5:
+            flash("You must create a task for at least 5 workers.", "error")
+            return redirect(url_for("main.create_task"))
+
+        price = TASK_PRICES[task_type]
+
+        # Amount charged to the task creator per worker.
+        # The fee is included in this amount but is not shown
+        # separately on the create-task page.
+        reward = float(price["reward"])
+        website_fee = float(price["fee"])
+
+        amount_per_worker = reward + website_fee
+        total_cost = amount_per_worker * workers_needed
+
+        wallet = current_user.wallet_balance or 0
+
+        if wallet < total_cost:
+            flash(
+                f"Insufficient wallet balance. You need ₦{total_cost:,.2f}.",
+                "error"
+            )
+            return redirect(url_for("main.create_task"))
+
+        task = Task(
+            owner_id=current_user.id,
+            title=title,
+            description=description,
+            task_link=task_link,
+            reward=reward,
+            task_type=task_type,
+            total_cost=total_cost,
+            website_fee=website_fee,
+            workers_needed=workers_needed,
+            workers_remaining=workers_needed,
+            active=True
+        )
+
+        current_user.wallet_balance -= total_cost
+
+        db.session.add(task)
+        db.session.commit()
+
+        flash(
+            f"Task created successfully. ₦{total_cost:,.2f} deducted from your wallet.",
+            "success"
+        )
+
+        return redirect(url_for("main.dashboard"))
+
+    return render_template("create_task.html")
 @main.route("/")
 def home():
     return render_template("home.html")
@@ -167,21 +333,23 @@ def logout():
 @login_required
 def dashboard():
 
-    # A worker should only see tasks they have never submitted.
-    # This includes rejected submissions: rejected tasks can be
-    # resubmitted from the task/submission page, but must not return
-    # to the Available Tasks list.
+    # Keep tasks visible while a submission is pending.
+    # Remove them from Available Tasks after approval or rejection.
     tasks = Task.query.filter(
         Task.active.is_(True),
         ~Task.submissions.any(
-            TaskSubmission.user_id == current_user.id
+            db.and_(
+                TaskSubmission.user_id == current_user.id,
+                TaskSubmission.status.in_(["pending", "approved"])
+            )
         )
     ).order_by(
         Task.created_at.desc()
     ).all()
 
     submissions = TaskSubmission.query.filter_by(
-        user_id=current_user.id
+        user_id=current_user.id,
+        status="pending"
     ).order_by(
         TaskSubmission.created_at.desc()
     ).limit(10).all()
@@ -214,6 +382,49 @@ def task_detail(task_id):
 
         note = request.form.get("note", "").strip()
 
+        screenshot = request.files.get("screenshot")
+
+        if not screenshot or not screenshot.filename:
+            flash("Please upload a screenshot as proof of task completion.", "error")
+            return redirect(
+                url_for("main.task_detail", task_id=task.id)
+            )
+
+        allowed_extensions = {"png", "jpg", "jpeg", "webp"}
+        original_name = secure_filename(screenshot.filename)
+        extension = (
+            original_name.rsplit(".", 1)[1].lower()
+            if "." in original_name
+            else ""
+        )
+
+        if extension not in allowed_extensions:
+            flash(
+                "Screenshot must be PNG, JPG, JPEG, or WEBP.",
+                "error"
+            )
+            return redirect(
+                url_for("main.task_detail", task_id=task.id)
+            )
+
+        upload_dir = os.path.join(
+            os.path.dirname(__file__),
+            "static",
+            "uploads",
+            "submissions"
+        )
+        os.makedirs(upload_dir, exist_ok=True)
+
+        screenshot_filename = (
+            f"user_{current_user.id}_task_{task.id}_"
+            f"{secrets.token_hex(8)}.{extension}"
+        )
+
+        screenshot.save(
+            os.path.join(upload_dir, screenshot_filename)
+        )
+
+
         if not note:
             flash("Please enter your completion note.", "error")
             return redirect(
@@ -228,6 +439,7 @@ def task_detail(task_id):
 
         if existing and existing.status == "rejected":
             existing.note = note
+            existing.screenshot_filename = screenshot_filename
             existing.status = "pending"
             existing.rejection_reason = None
 
@@ -253,6 +465,7 @@ def task_detail(task_id):
                 user_id=current_user.id,
                 task_id=task.id,
                 note=note,
+                screenshot_filename=screenshot_filename,
                 status="pending"
             )
 
@@ -318,7 +531,7 @@ def withdraw():
 
             balance = current_user.referral_balance or 0
 
-            if amount < 500:
+            if amount < 100:
                 flash(
                     "Minimum withdrawal is ₦500.",
                     "error"
@@ -434,7 +647,7 @@ def airtime():
 
         if amount < AIRTIME_MINIMUM:
             flash(
-                "Minimum airtime purchase is ₦50.",
+                "Minimum airtime purchase is ₦100.",
                 "error"
             )
             return redirect(url_for("main.airtime"))
@@ -506,7 +719,10 @@ def tasks_page():
     tasks = Task.query.filter(
         Task.active.is_(True),
         ~Task.submissions.any(
-            TaskSubmission.user_id == current_user.id
+            db.and_(
+                TaskSubmission.user_id == current_user.id,
+                TaskSubmission.status.in_(["pending", "approved"])
+            )
         )
     ).order_by(
         Task.created_at.desc()
@@ -528,3 +744,111 @@ def submissions_page():
         "submissions.html",
         submissions=submissions
     )
+
+
+@main.route("/my-tasks")
+@login_required
+def my_tasks():
+    """Show tasks created by the current user and their submissions."""
+    tasks = Task.query.filter_by(
+        owner_id=current_user.id
+    ).order_by(
+        Task.created_at.desc()
+    ).all()
+
+    return render_template(
+        "my_tasks.html",
+        tasks=tasks
+    )
+
+
+@main.route("/my-tasks/<int:task_id>/submission/<int:submission_id>/review",
+             methods=["POST"])
+@login_required
+def review_task_submission(task_id, submission_id):
+    """Allow a task creator to approve or reject their own task submissions."""
+
+    task = Task.query.get_or_404(task_id)
+
+    # Security: only the task creator can review submissions.
+    if task.owner_id != current_user.id:
+        flash("You are not allowed to review this task.", "error")
+        return redirect(url_for("main.my_tasks"))
+
+    submission = TaskSubmission.query.filter_by(
+        id=submission_id,
+        task_id=task.id
+    ).first_or_404()
+
+    # Do not process an already-reviewed submission.
+    if submission.status != "pending":
+        flash("This submission has already been reviewed.", "error")
+        return redirect(url_for("main.my_tasks"))
+
+    action = request.form.get("action", "").strip().lower()
+
+    if action == "approve":
+
+        # Pay the worker only once, when the creator approves.
+        worker = submission.user
+        worker.task_balance = (worker.task_balance or 0) + task.reward
+
+        submission.status = "approved"
+        submission.rejection_reason = None
+
+        # Referral reward:
+        # The referrer earns ₦50 after the referred user gets
+        # 2 approved task submissions.
+        referral = Referral.query.filter_by(
+            referred_id=worker.id
+        ).first()
+
+        if referral and not referral.reward_paid:
+            approved_count = TaskSubmission.query.filter_by(
+                user_id=worker.id,
+                status="approved"
+            ).count()
+
+            referral.tasks_completed = approved_count
+
+            if approved_count >= 2:
+                referrer = referral.referrer
+                referrer.referral_balance = (
+                    referrer.referral_balance or 0
+                ) + REFERRAL_REWARD
+
+                referral.reward_paid = True
+
+        db.session.commit()
+
+        flash(
+            f"Submission approved. ₦{task.reward:,.2f} has been added "
+            f"to {worker.username}'s task balance.",
+            "success"
+        )
+
+    elif action == "reject":
+
+        reason = request.form.get("rejection_reason", "").strip()
+
+        if not reason:
+            flash(
+                "Please provide a rejection reason.",
+                "error"
+            )
+            return redirect(url_for("main.my_tasks"))
+
+        submission.status = "rejected"
+        submission.rejection_reason = reason
+
+        db.session.commit()
+
+        flash(
+            "Submission rejected. The worker can see your reason and resubmit.",
+            "success"
+        )
+
+    else:
+        flash("Invalid review action.", "error")
+
+    return redirect(url_for("main.my_tasks"))

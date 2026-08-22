@@ -127,35 +127,62 @@
 
             {% if existing.status == "rejected" %}
 
-                <form method="POST" class="task-submit-form">
+                <div class="rejection-box">
+                    <strong>
+                        <i class="bi bi-x-circle"></i>
+                        Task Rejected
+                    </strong>
 
-                    <label>
-                        Resubmit Task / New Proof
+                    <p>
+                        {{ existing.rejection_reason or "Your submission was not approved." }}
+                    </p>
+                </div>
+
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                    class="task-submit-form"
+                >
+                    <h3>Fix and Resubmit</h3>
+
+                    <label for="note">
+                        Completion Note
                     </label>
 
                     <textarea
+                        id="note"
                         name="note"
                         rows="5"
-                        placeholder="Correct the issue and explain how you completed the task..."
-                        required></textarea>
+                        placeholder="Explain how you corrected the issue and completed the task..."
+                        required
+                    ></textarea>
+
+                    <label for="screenshot">
+                        New Screenshot Proof
+                    </label>
+
+                    <input
+                        id="screenshot"
+                        type="file"
+                        name="screenshot"
+                        accept=".png,.jpg,.jpeg,.webp"
+                        required
+                    >
 
                     <button
                         type="submit"
-                        class="primary-btn auth-submit">
-
-                        Resubmit Task
-
+                        class="primary-btn auth-submit"
+                    >
                         <i class="bi bi-arrow-repeat"></i>
-
+                        Resubmit Task
                     </button>
-
                 </form>
 
             {% endif %}
 
         {% else %}
 
-            <form method="POST" class="task-submit-form">
+            <form method="POST" enctype="multipart/form-data" class="task-submit-form">
 
                 <label>
                     Completion Note / Proof
@@ -165,16 +192,27 @@
                     name="note"
                     rows="5"
                     placeholder="Tell us how you completed the task..."
-                    required></textarea>
+                    required
+                ></textarea>
+
+                <label for="screenshot">
+                    Screenshot Proof
+                </label>
+
+                <input
+                    id="screenshot"
+                    type="file"
+                    name="screenshot"
+                    accept=".png,.jpg,.jpeg,.webp"
+                    required
+                >
 
                 <button
                     type="submit"
-                    class="primary-btn auth-submit">
-
+                    class="primary-btn auth-submit"
+                >
                     Submit Task
-
                     <i class="bi bi-send"></i>
-
                 </button>
 
             </form>

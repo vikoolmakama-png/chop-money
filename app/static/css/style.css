@@ -2350,3 +2350,498 @@ html {
     }
 }
 
+
+/* ===== DEPOSIT PAGE REDESIGN ===== */
+
+.deposit-page {
+    min-height: 100vh;
+    padding: 24px 16px 40px;
+    background: #f4f7fb;
+}
+
+.deposit-container {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+}
+
+.deposit-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 10px 35px rgba(20, 40, 80, 0.08);
+}
+
+.deposit-header {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.deposit-header h1 {
+    margin: 0 0 7px;
+    font-size: 28px;
+    font-weight: 800;
+    color: #10233f;
+}
+
+.deposit-header p {
+    margin: 0;
+    color: #718096;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.deposit-wallet {
+    background: #eef5ff;
+    border-radius: 18px;
+    padding: 18px 20px;
+    margin-bottom: 20px;
+}
+
+.deposit-wallet span {
+    display: block;
+    color: #3478d4;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.deposit-wallet strong {
+    display: block;
+    color: #10233f;
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.deposit-account {
+    background: #f8fafc;
+    border: 1px solid #e4eaf2;
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.deposit-account h3 {
+    margin: 0 0 18px;
+    color: #10233f;
+    font-size: 18px;
+}
+
+.deposit-detail {
+    padding: 11px 0;
+    border-bottom: 1px solid #e8edf3;
+}
+
+.deposit-detail:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.deposit-detail span {
+    display: block;
+    color: #7b8798;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.deposit-detail strong {
+    display: block;
+    color: #172b4d;
+    font-size: 16px;
+}
+
+.deposit-account .account-number {
+    font-size: 24px;
+    letter-spacing: 1px;
+    color: #1769d1;
+}
+
+.deposit-minimum {
+    background: #fff8e6;
+    border: 1px solid #f4df9a;
+    border-radius: 14px;
+    padding: 13px 15px;
+    margin-top: 14px;
+    color: #735b16;
+    font-size: 14px;
+}
+
+.deposit-minimum strong {
+    color: #5c4710;
+}
+
+.deposit-notice {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    background: #f0f7ff;
+    border: 1px solid #d8eaff;
+    border-radius: 14px;
+    padding: 14px 15px;
+    margin-bottom: 22px;
+    color: #40546c;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.deposit-notice i {
+    color: #2474d8;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.deposit-form label {
+    display: block;
+    margin: 0 0 7px;
+    color: #263b59;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.deposit-form input {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-height: 50px;
+    box-sizing: border-box;
+    border: 1px solid #d7dfe9;
+    border-radius: 12px;
+    padding: 0 14px;
+    margin: 0 0 17px;
+    background: #ffffff;
+    color: #172b4d;
+    font-size: 15px;
+    outline: none;
+}
+
+.deposit-form input:focus {
+    border-color: #2878dc;
+    box-shadow: 0 0 0 3px rgba(40, 120, 220, 0.10);
+}
+
+.deposit-form input::placeholder {
+    color: #9aa6b5;
+}
+
+.deposit-submit {
+    width: 100%;
+    min-height: 52px;
+    border: 0;
+    border-radius: 13px;
+    background: #1769d1;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(23, 105, 209, 0.20);
+}
+
+.deposit-submit:active {
+    transform: translateY(1px);
+}
+
+.deposit-back {
+    display: block;
+    text-align: center;
+    margin-top: 18px;
+    color: #2878dc;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+@media (max-width: 480px) {
+    .deposit-page {
+        padding: 14px 12px 30px;
+    }
+
+    .deposit-card {
+        padding: 19px 16px;
+        border-radius: 20px;
+    }
+
+    .deposit-header h1 {
+        font-size: 25px;
+    }
+
+    .deposit-wallet strong {
+        font-size: 25px;
+    }
+
+    .deposit-account {
+        padding: 17px;
+    }
+
+    .deposit-account .account-number {
+        font-size: 21px;
+    }
+}
+
+
+/* =========================================================
+   MY TASKS PAGE REDESIGN
+   ========================================================= */
+
+.dashboard-container .dashboard-welcome {
+    margin-bottom: 22px;
+}
+
+.dashboard-container .dashboard-welcome span {
+    color: #1769e0;
+    font-weight: 800;
+    letter-spacing: 2px;
+    font-size: 14px;
+}
+
+.dashboard-container .dashboard-welcome h1 {
+    margin: 8px 0 8px;
+    font-size: 42px;
+    line-height: 1.1;
+    color: #14213d;
+}
+
+.dashboard-container .dashboard-welcome p {
+    margin: 0;
+    color: #667085;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+/* Create task button */
+.dashboard-container a[href="/create-task"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 58px;
+    margin: 0 0 24px;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 10px 25px rgba(23, 105, 224, 0.20);
+}
+
+/* Main task card */
+.dashboard-container > .auth-card {
+    position: relative;
+    overflow: hidden;
+    padding: 26px !important;
+    margin-bottom: 24px !important;
+    border: 1px solid #e3eaf5 !important;
+    border-radius: 24px !important;
+    background: #ffffff;
+    box-shadow: 0 12px 35px rgba(20, 33, 61, 0.08);
+}
+
+/* Task top section */
+.dashboard-container > .auth-card > div:first-child {
+    align-items: flex-start !important;
+}
+
+.dashboard-container > .auth-card h2 {
+    margin: 0 0 6px;
+    color: #14213d;
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.dashboard-container > .auth-card p {
+    color: #667085;
+    line-height: 1.5;
+}
+
+/* Task description */
+.dashboard-container > .auth-card h2 + p {
+    margin: 0 0 18px;
+    font-size: 16px;
+}
+
+/* Task information */
+.dashboard-container > .auth-card > div:first-child p strong {
+    color: #14213d;
+}
+
+.dashboard-container > .auth-card > div:first-child p:nth-last-child(2),
+.dashboard-container > .auth-card > div:first-child p:last-child {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 145px;
+    margin: 5px 8px 0 0;
+    padding: 12px 15px;
+    border: 1px solid #e7edf6;
+    border-radius: 14px;
+    background: #f8faff;
+}
+
+.dashboard-container > .auth-card > div:first-child p:nth-last-child(2) strong,
+.dashboard-container > .auth-card > div:first-child p:last-child strong {
+    font-size: 13px;
+    color: #667085;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+}
+
+.dashboard-container > .auth-card > div:first-child p:nth-last-child(2),
+.dashboard-container > .auth-card > div:first-child p:last-child {
+    color: #14213d;
+    font-weight: 700;
+}
+
+/* Status badge */
+.dashboard-container > .auth-card > div:first-child .flash.success,
+.dashboard-container > .auth-card > div:first-child .flash {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 90px;
+    padding: 11px 17px;
+    border: 0;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+/* Divider */
+.dashboard-container > .auth-card hr {
+    height: 1px;
+    margin: 24px 0 20px;
+    border: 0;
+    background: #e8edf5;
+}
+
+/* Submissions title */
+.dashboard-container > .auth-card h3 {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0 0 15px;
+    color: #14213d;
+    font-size: 21px;
+}
+
+.dashboard-container > .auth-card h3::before {
+    content: "✓";
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: #eaf2ff;
+    color: #1769e0;
+    font-size: 15px;
+    font-weight: 900;
+}
+
+/* Empty submissions state */
+.dashboard-container > .auth-card h3 + p {
+    margin: 0;
+    padding: 22px;
+    border: 1px dashed #cfd8e6;
+    border-radius: 16px;
+    background: #f8fafc;
+    color: #667085;
+    text-align: center;
+}
+
+/* Worker submission cards */
+.dashboard-container > .auth-card > div[style*="border:1px"] {
+    border: 1px solid #e4eaf3 !important;
+    border-radius: 18px !important;
+    padding: 20px !important;
+    margin-top: 15px !important;
+    background: #fbfcff !important;
+    box-shadow: 0 5px 18px rgba(20, 33, 61, 0.05);
+}
+
+/* Worker / status labels */
+.dashboard-container > .auth-card > div[style*="border:1px"] p {
+    margin: 7px 0;
+}
+
+.dashboard-container > .auth-card > div[style*="border:1px"] p strong {
+    color: #14213d;
+}
+
+/* Completion note and proof text boxes */
+.dashboard-container > .auth-card > div[style*="border:1px"] div[style*="background:#f7f7f7"] {
+    border: 1px solid #e8edf5 !important;
+    border-radius: 13px !important;
+    background: #ffffff !important;
+    color: #344054;
+    line-height: 1.5;
+}
+
+/* Screenshot proof */
+.dashboard-container img[alt="Worker task completion screenshot"] {
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    border: 1px solid #e1e7f0;
+    border-radius: 12px;
+    box-shadow: 0 5px 18px rgba(20, 33, 61, 0.08);
+}
+
+/* Approve / reject controls */
+.dashboard-container .admin-approve,
+.dashboard-container .admin-reject,
+.dashboard-container button {
+    border-radius: 13px;
+    min-height: 48px;
+    font-weight: 800;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+
+    .dashboard-container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .dashboard-container .dashboard-welcome h1 {
+        font-size: 36px;
+    }
+
+    .dashboard-container .dashboard-welcome p {
+        font-size: 16px;
+    }
+
+    .dashboard-container > .auth-card {
+        padding: 20px !important;
+        border-radius: 20px !important;
+    }
+
+    .dashboard-container > .auth-card h2 {
+        font-size: 25px;
+    }
+
+    .dashboard-container > .auth-card > div:first-child {
+        display: block !important;
+    }
+
+    .dashboard-container > .auth-card > div:first-child > div:last-child {
+        margin-top: 15px;
+    }
+
+    .dashboard-container > .auth-card > div:first-child p:nth-last-child(2),
+    .dashboard-container > .auth-card > div:first-child p:last-child {
+        display: flex;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 6px 0 0;
+    }
+
+    .dashboard-container > .auth-card > div[style*="border:1px"] {
+        padding: 16px !important;
+    }
+
+    .dashboard-container > .auth-card h3 {
+        font-size: 20px;
+    }
+}
+
