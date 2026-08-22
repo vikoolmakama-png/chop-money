@@ -9,6 +9,7 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.login_view = "main.login"
 
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object("config.Config")
@@ -31,8 +32,6 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-        # Create/update the deployment admin from environment variables.
-        # Credentials are never stored in the source code.
         admin_username = os.environ.get("ADMIN_USERNAME")
         admin_email = os.environ.get("ADMIN_EMAIL")
         admin_password = os.environ.get("ADMIN_PASSWORD")
