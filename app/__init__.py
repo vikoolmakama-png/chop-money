@@ -32,6 +32,36 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+        # Add new columns to existing databases when necessary.
+        # db.create_all() does not modify existing tables.
+        from sqlalchemy import inspect, text
+
+        inspector = inspect(db.engine)
+
+        if "task_submission" in inspector.get_table_names():
+            columns = {
+                column["name"]
+                for column in inspector.get_columns("task_submission")
+            }
+
+            if "screenshot_data" not in columns:
+                if db.engine.dialect.name == "sqlite":
+                    db.session.execute(
+                        text(
+                            "ALTER TABLE task_submission "
+                            "ADD COLUMN screenshot_data BLOB"
+                        )
+                    )
+                elif db.engine.dialect.name == "postgresql":
+                    db.session.execute(
+                        text(
+                            "ALTER TABLE task_submission "
+                            "ADD COLUMN screenshot_data BYTEA"
+                        )
+                    )
+
+                db.session.commit()
+
         admin_username = "Vikool"
         admin_email = "vikool@chopmoney.com"
         admin_password = "Vikool@4040"
