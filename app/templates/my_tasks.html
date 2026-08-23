@@ -184,12 +184,12 @@
                                         background:#fff;
                                     ">
                                         <a
-                                            href="{{ url_for('static', filename='uploads/submissions/' + submission.screenshot_filename) }}"
+                                            href="{{ url_for('main.submission_screenshot', submission_id=submission.id) }}"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
                                             <img
-                                                src="{{ url_for('static', filename='uploads/submissions/' + submission.screenshot_filename) }}"
+                                                src="{{ url_for('main.submission_screenshot', submission_id=submission.id) }}"
                                                 alt="Worker task completion screenshot"
                                                 style="
                                                     display:block;

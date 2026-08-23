@@ -292,6 +292,40 @@ def register(referral_code=None):
     )
 
 
+@main.route("/submission/<int:submission_id>/screenshot")
+@login_required
+def submission_screenshot(submission_id):
+    from io import BytesIO
+    from flask import send_file, abort
+
+    submission = db.session.get(TaskSubmission, submission_id)
+
+    if not submission or not submission.screenshot_data:
+        abort(404)
+
+    if (
+        submission.user_id != current_user.id
+        and not current_user.is_admin
+    ):
+        abort(403)
+
+    filename = submission.screenshot_filename or "screenshot.jpg"
+    extension = filename.rsplit(".", 1)[-1].lower() if "." in filename else "jpg"
+
+    mime_types = {
+        "png": "image/png",
+        "jpg": "image/jpeg",
+        "jpeg": "image/jpeg",
+        "webp": "image/webp",
+    }
+
+    return send_file(
+        BytesIO(submission.screenshot_data),
+        mimetype=mime_types.get(extension, "image/jpeg"),
+        download_name=filename
+    )
+
+
 @main.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -424,9 +458,13 @@ def task_detail(task_id):
             f"{secrets.token_hex(8)}.{extension}"
         )
 
-        screenshot.save(
-            os.path.join(upload_dir, screenshot_filename)
-        )
+        screenshot_data = screenshot.read()
+
+        if not screenshot_data:
+            flash("The uploaded screenshot is empty.", "error")
+            return redirect(
+                url_for("main.task_detail", task_id=task.id)
+            )
 
 
         if not note:
@@ -444,6 +482,7 @@ def task_detail(task_id):
         if existing and existing.status == "rejected":
             existing.note = note
             existing.screenshot_filename = screenshot_filename
+            existing.screenshot_data = screenshot_data
             existing.status = "pending"
             existing.rejection_reason = None
 
@@ -470,6 +509,7 @@ def task_detail(task_id):
                 task_id=task.id,
                 note=note,
                 screenshot_filename=screenshot_filename,
+                screenshot_data=screenshot_data,
                 status="pending"
             )
 
