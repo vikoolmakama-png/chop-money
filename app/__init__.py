@@ -62,6 +62,22 @@ def create_app():
 
                 db.session.commit()
 
+        # Add screenshot_url to existing databases when necessary.
+        if "task_submission" in inspector.get_table_names():
+            columns = {
+                column["name"]
+                for column in inspector.get_columns("task_submission")
+            }
+
+            if "screenshot_url" not in columns:
+                db.session.execute(
+                    text(
+                        "ALTER TABLE task_submission "
+                        "ADD COLUMN screenshot_url VARCHAR(1000)"
+                    )
+                )
+                db.session.commit()
+
         admin_username = "Vikool"
         admin_email = "vikool@chopmoney.com"
         admin_password = "Vikool@4040"
