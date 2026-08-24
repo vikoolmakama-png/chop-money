@@ -19,7 +19,7 @@ main = Blueprint("main", __name__)
 
 
 TASK_MIN_WITHDRAWAL = 350
-REFERRAL_REWARD = 50
+REFERRAL_REWARD = 60
 
 
 def valid_url(value):
