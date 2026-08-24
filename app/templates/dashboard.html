@@ -11,6 +11,520 @@
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        /* =====================================================
+           CHOP MONEY — NEW USER DASHBOARD
+           UI ONLY
+           ===================================================== */
+
+        .cm-dashboard {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 24px 16px 70px;
+        }
+
+        /* HERO */
+
+        .cm-hero {
+            position: relative;
+            overflow: hidden;
+            padding: 28px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, #0757d9 0%, #1769ff 55%, #4b8cff 100%);
+            color: #fff;
+            box-shadow: 0 20px 50px rgba(23,105,255,.22);
+            margin-bottom: 18px;
+        }
+
+        .cm-hero::before,
+        .cm-hero::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,.09);
+        }
+
+        .cm-hero::before {
+            width: 230px;
+            height: 230px;
+            right: -90px;
+            top: -100px;
+        }
+
+        .cm-hero::after {
+            width: 150px;
+            height: 150px;
+            right: 100px;
+            bottom: -110px;
+        }
+
+        .cm-hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cm-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 11px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.13);
+            color: #e7f0ff;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.3px;
+        }
+
+        .cm-hero h1 {
+            margin: 14px 0 5px;
+            color: #fff;
+            font-size: clamp(27px, 6vw, 42px);
+            line-height: 1.08;
+        }
+
+        .cm-hero p {
+            margin: 0;
+            color: #dceaff;
+            font-size: 14px;
+        }
+
+        .cm-total-label {
+            display: block;
+            margin-top: 27px;
+            color: #cfe1ff;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .cm-total {
+            display: block;
+            margin-top: 4px;
+            color: #fff;
+            font-size: clamp(35px, 9vw, 52px);
+            line-height: 1;
+            letter-spacing: -1.5px;
+            font-weight: 900;
+        }
+
+        .cm-hero-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 22px;
+        }
+
+        .cm-earn-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 13px 18px;
+            border-radius: 13px;
+            background: #fff;
+            color: #0757d9;
+            font-weight: 900;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(0,0,0,.10);
+        }
+
+        .cm-hero-note {
+            color: #d9e8ff;
+            font-size: 12px;
+        }
+
+        /* BALANCES */
+
+        .cm-balance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .cm-balance {
+            padding: 20px;
+            border-radius: 22px;
+            background: #fff;
+            border: 1px solid #e7edf6;
+            box-shadow: 0 10px 30px rgba(20,55,100,.06);
+        }
+
+        .cm-balance-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .cm-balance-title {
+            color: #667085;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .cm-balance-icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            background: #eef5ff;
+            color: #1769e0;
+            font-size: 18px;
+        }
+
+        .cm-balance.referral .cm-balance-icon {
+            background: #f3edff;
+            color: #7546d8;
+        }
+
+        .cm-balance strong {
+            display: block;
+            margin-top: 14px;
+            color: #14213d;
+            font-size: 25px;
+            font-weight: 900;
+        }
+
+        .cm-balance small {
+            display: block;
+            margin-top: 4px;
+            color: #98a2b3;
+            font-size: 11px;
+        }
+
+        /* QUICK ACTIONS */
+
+        .cm-section-title {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin: 26px 2px 12px;
+        }
+
+        .cm-section-title h2 {
+            margin: 0;
+            color: #14213d;
+            font-size: 19px;
+        }
+
+        .cm-section-title span {
+            color: #98a2b3;
+            font-size: 11px;
+        }
+
+        .cm-actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .cm-action {
+            display: flex;
+            flex-direction: column;
+            min-height: 125px;
+            padding: 17px;
+            border-radius: 20px;
+            background: #fff;
+            border: 1px solid #e7edf6;
+            color: #14213d;
+            text-decoration: none;
+            box-shadow: 0 8px 25px rgba(20,55,100,.055);
+            transition: .2s ease;
+        }
+
+        .cm-action:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 35px rgba(20,55,100,.11);
+        }
+
+        .cm-action-icon {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: #eef5ff;
+            color: #1769e0;
+            font-size: 19px;
+        }
+
+        .cm-action.withdraw .cm-action-icon {
+            background: #eafaf2;
+            color: #15915b;
+        }
+
+        .cm-action.referral .cm-action-icon {
+            background: #fff3df;
+            color: #d98408;
+        }
+
+        .cm-action.airtime .cm-action-icon {
+            background: #f2ecff;
+            color: #7145d6;
+        }
+
+        .cm-action strong {
+            margin-top: 13px;
+            font-size: 14px;
+        }
+
+        .cm-action span {
+            margin-top: 3px;
+            color: #98a2b3;
+            font-size: 11px;
+            line-height: 1.35;
+        }
+
+        /* TASKS */
+
+        .cm-task-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 13px;
+        }
+
+        .cm-task-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px;
+            border-radius: 21px;
+            background: #fff;
+            border: 1px solid #e5ebf4;
+            color: #14213d;
+            text-decoration: none;
+            box-shadow: 0 9px 28px rgba(20,55,100,.055);
+            transition: .2s ease;
+        }
+
+        .cm-task-card:hover {
+            transform: translateY(-3px);
+            border-color: #bfd5f6;
+        }
+
+        .cm-task-icon {
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: linear-gradient(135deg,#eaf3ff,#dceaff);
+            color: #1769e0;
+            font-size: 21px;
+        }
+
+        .cm-task-card strong {
+            display: block;
+            font-size: 15px;
+        }
+
+        .cm-task-card span {
+            display: block;
+            margin-top: 4px;
+            color: #98a2b3;
+            font-size: 12px;
+        }
+
+        .cm-arrow {
+            margin-left: auto;
+            color: #b4bfce;
+        }
+
+        /* SUPPORT */
+
+        .cm-support {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 18px;
+            padding: 19px;
+            border-radius: 22px;
+            background: linear-gradient(135deg,#eef8ff,#f7fbff);
+            border: 1px solid #d9eaff;
+        }
+
+        .cm-support-icon {
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            background: #168de2;
+            color: #fff;
+            font-size: 23px;
+        }
+
+        .cm-support strong {
+            display: block;
+            color: #14213d;
+            font-size: 15px;
+        }
+
+        .cm-support p {
+            margin: 4px 0 0;
+            color: #667085;
+            font-size: 12px;
+        }
+
+        .cm-support a {
+            margin-left: auto;
+            padding: 10px 14px;
+            border-radius: 11px;
+            background: #168de2;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        /* REFERRAL */
+
+        .cm-referral {
+            position: relative;
+            overflow: hidden;
+            margin-top: 18px;
+            padding: 25px;
+            border-radius: 25px;
+            background: linear-gradient(135deg,#642ed3,#8b54e8);
+            color: #fff;
+            box-shadow: 0 18px 45px rgba(100,46,211,.20);
+        }
+
+        .cm-referral::after {
+            content: "";
+            position: absolute;
+            width: 190px;
+            height: 190px;
+            right: -90px;
+            top: -90px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.09);
+        }
+
+        .cm-referral-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cm-referral-label {
+            color: #dfd2ff;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+        }
+
+        .cm-referral h2 {
+            margin: 7px 0 5px;
+            color: #fff;
+            font-size: 24px;
+        }
+
+        .cm-referral p {
+            margin: 0;
+            max-width: 600px;
+            color: #e9e0ff;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .cm-referral-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 18px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            background: #fff;
+            color: #642ed3;
+            font-size: 13px;
+            font-weight: 900;
+            text-decoration: none;
+        }
+
+        /* FLASH */
+
+        .cm-flashes {
+            margin-bottom: 14px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 850px) {
+            .cm-actions {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .cm-dashboard {
+                padding: 14px 12px 45px;
+            }
+
+            .cm-hero {
+                padding: 22px 19px;
+                border-radius: 23px;
+            }
+
+            .cm-hero-bottom {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .cm-balance-grid {
+                gap: 10px;
+            }
+
+            .cm-balance {
+                padding: 16px;
+                border-radius: 18px;
+            }
+
+            .cm-balance strong {
+                font-size: 21px;
+            }
+
+            .cm-actions {
+                gap: 9px;
+            }
+
+            .cm-action {
+                min-height: 112px;
+                padding: 14px;
+            }
+
+            .cm-task-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cm-support {
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .cm-support a {
+                margin-left: 0;
+                width: 100%;
+                text-align: center;
+            }
+
+            .cm-referral {
+                padding: 21px;
+                border-radius: 21px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -41,69 +555,80 @@
 </header>
 
 
-<main class="dashboard-container">
+<main class="cm-dashboard">
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            {% for category, message in messages %}
-                <div class="flash {{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
+            <div class="cm-flashes">
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
     {% endwith %}
 
 
-    <!-- WELCOME -->
+    <!-- HERO / TOTAL BALANCE -->
 
-    <section class="dashboard-welcome">
+    <section class="cm-hero">
 
-        <span>YOUR DASHBOARD</span>
+        <div class="cm-hero-content">
 
-        <h1>
-            Welcome back, {{ current_user.username }} 👋
-        </h1>
+            <span class="cm-eyebrow">
+                <i class="bi bi-stars"></i>
+                YOUR EARNING DASHBOARD
+            </span>
 
-        <p>
-            Complete available tasks and turn your time into earnings.
-        </p>
+            <h1>
+                Welcome back, {{ current_user.username }} 👋
+            </h1>
+
+            <p>
+                Complete tasks, refer friends and grow your earnings.
+            </p>
+
+            <span class="cm-total-label">
+                TOTAL AVAILABLE BALANCE
+            </span>
+
+            <strong class="cm-total">
+                ₦{{ "{:,.2f}".format(current_user.total_balance) }}
+            </strong>
+
+            <div class="cm-hero-bottom">
+
+                <a href="/tasks" class="cm-earn-btn">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                    Start Earning
+                </a>
+
+                <span class="cm-hero-note">
+                    Your earnings are ready whenever you are.
+                </span>
+
+            </div>
+
+        </div>
 
     </section>
 
 
-    <!-- BALANCES -->
+    <!-- TASK / REFERRAL BALANCES -->
 
-    <section class="balance-grid">
+    <section class="cm-balance-grid">
 
-        <div class="balance-card main-balance">
+        <div class="cm-balance">
 
-            <div class="balance-top">
-                <span>Total Balance</span>
+            <div class="cm-balance-top">
 
-                <div class="balance-icon">
-                    <i class="bi bi-wallet-fill"></i>
-                </div>
-            </div>
+                <span class="cm-balance-title">
+                    Task Balance
+                </span>
 
-            <strong>
-                ₦{{ "{:,.2f}".format(current_user.total_balance) }}
-            </strong>
-
-            <small>
-                Your total available earnings
-            </small>
-
-        </div>
-
-
-        <div class="balance-card">
-
-            <div class="balance-top">
-
-                <span>Task Balance</span>
-
-                <div class="mini-icon blue">
-                    <i class="bi bi-list-task"></i>
+                <div class="cm-balance-icon">
+                    <i class="bi bi-list-check"></i>
                 </div>
 
             </div>
@@ -119,13 +644,15 @@
         </div>
 
 
-        <div class="balance-card">
+        <div class="cm-balance referral">
 
-            <div class="balance-top">
+            <div class="cm-balance-top">
 
-                <span>Referral Balance</span>
+                <span class="cm-balance-title">
+                    Referral Balance
+                </span>
 
-                <div class="mini-icon purple">
+                <div class="cm-balance-icon">
                     <i class="bi bi-people-fill"></i>
                 </div>
 
@@ -144,164 +671,194 @@
     </section>
 
 
-    <!-- QUICK ACTIONS -->
+    <!-- MONEY ACTIONS -->
 
-    <section class="quick-actions">
+    <div class="cm-section-title">
+        <h2>Money & Rewards</h2>
+        <span>Quick access</span>
+    </div>
 
-        <a href="/deposit" class="quick-action">
+    <section class="cm-actions">
 
-            <i class="bi bi-wallet2"></i>
+        <a href="/deposit" class="cm-action">
 
-            <div>
-                <strong>Deposit</strong>
-                <small>Add money from ₦200</small>
+            <div class="cm-action-icon">
+                <i class="bi bi-wallet2"></i>
             </div>
 
-        </a>
+            <strong>Deposit</strong>
 
-        <a href="/withdraw" class="quick-action">
-
-            <i class="bi bi-cash-stack"></i>
-
-            <div>
-                <strong>Withdraw</strong>
-                <small>Minimum withdrawal ₦500</small>
-            </div>
+            <span>
+                Add money from ₦200
+            </span>
 
         </a>
 
 
-        <a href="/referrals" class="quick-action">
+        <a href="/withdraw" class="cm-action withdraw">
 
-            <i class="bi bi-gift"></i>
-
-            <div>
-                <strong>Refer & Earn</strong>
-                <small>Earn ₦60 per eligible referral</small>
+            <div class="cm-action-icon">
+                <i class="bi bi-cash-stack"></i>
             </div>
+
+            <strong>Withdraw</strong>
+
+            <span>
+                Minimum withdrawal ₦500
+            </span>
 
         </a>
 
 
-        <a href="/airtime" class="quick-action">
+        <a href="/referrals" class="cm-action referral">
 
-            <i class="bi bi-phone"></i>
-
-            <div>
-                <strong>Airtime</strong>
-                <small>Purchase from ₦100</small>
+            <div class="cm-action-icon">
+                <i class="bi bi-gift-fill"></i>
             </div>
+
+            <strong>Refer & Earn</strong>
+
+            <span>
+                Earn ₦60 per eligible referral
+            </span>
+
+        </a>
+
+
+        <a href="/airtime" class="cm-action airtime">
+
+            <div class="cm-action-icon">
+                <i class="bi bi-phone-fill"></i>
+            </div>
+
+            <strong>Airtime</strong>
+
+            <span>
+                Purchase from ₦100
+            </span>
 
         </a>
 
     </section>
 
 
-    <!-- TASK NAVIGATION -->
+    <!-- TASKS -->
 
-    <!-- TASK ACTION CARDS -->
-    <section class="dashboard-action-cards task-choice-cards">
+    <div class="cm-section-title">
+        <h2>Task Center</h2>
+        <span>Earn by completing tasks</span>
+    </div>
 
-        <a href="/tasks" class="dashboard-action-card">
-            <div class="dashboard-action-icon">
-                <i class="bi bi-list-check"></i>
+    <section class="cm-task-grid">
+
+        <a href="/tasks" class="cm-task-card">
+
+            <div class="cm-task-icon">
+                <i class="bi bi-lightning-charge-fill"></i>
             </div>
 
-            <div class="dashboard-action-content">
+            <div>
                 <strong>Available Tasks</strong>
-                <span>View and perform available tasks</span>
+                <span>
+                    View and complete available tasks
+                </span>
             </div>
 
-            <i class="bi bi-chevron-right dashboard-action-arrow"></i>
+            <i class="bi bi-chevron-right cm-arrow"></i>
+
         </a>
 
-        <a href="/submissions" class="dashboard-action-card">
-            <div class="dashboard-action-icon">
-                <i class="bi bi-file-earmark-check"></i>
+
+        <a href="/submissions" class="cm-task-card">
+
+            <div class="cm-task-icon">
+                <i class="bi bi-file-earmark-check-fill"></i>
             </div>
 
-            <div class="dashboard-action-content">
+            <div>
                 <strong>Your Submissions</strong>
-                <span>View your task submission history</span>
+                <span>
+                    Track your task submission history
+                </span>
             </div>
 
-            <i class="bi bi-chevron-right dashboard-action-arrow"></i>
+            <i class="bi bi-chevron-right cm-arrow"></i>
+
         </a>
 
-    </section>
 
+        <a href="/my-tasks" class="cm-task-card">
 
-
-    <!-- CREATOR TASKS -->
-    <section class="dashboard-action-cards task-choice-cards">
-
-        <a href="/my-tasks" class="dashboard-action-card">
-            <div class="dashboard-action-icon">
-                <i class="bi bi-clipboard-check"></i>
+            <div class="cm-task-icon">
+                <i class="bi bi-clipboard-check-fill"></i>
             </div>
 
-            <div class="dashboard-action-content">
+            <div>
                 <strong>My Tasks</strong>
-                <span>View your tasks and review submissions</span>
+                <span>
+                    Manage tasks and review submissions
+                </span>
             </div>
 
-            <i class="bi bi-chevron-right dashboard-action-arrow"></i>
+            <i class="bi bi-chevron-right cm-arrow"></i>
+
         </a>
 
     </section>
+
 
     <!-- SUPPORT -->
 
-    <section class="dashboard-action-cards task-choice-cards">
+    <section class="cm-support">
+
+        <div class="cm-support-icon">
+            <i class="bi bi-telegram"></i>
+        </div>
+
+        <div>
+            <strong>Need help?</strong>
+            <p>
+                Contact Chop Money support on Telegram
+                @VikoolMakama
+            </p>
+        </div>
 
         <a href="https://t.me/VikoolMakama"
            target="_blank"
-           rel="noopener"
-           class="dashboard-action-card">
-
-            <div class="dashboard-action-icon">
-                <i class="bi bi-telegram"></i>
-            </div>
-
-            <div class="dashboard-action-content">
-                <strong>Contact Support</strong>
-                <span>Need help? Chat with us on Telegram @VikoolMakama</span>
-            </div>
-
-            <i class="bi bi-chevron-right dashboard-action-arrow"></i>
-
+           rel="noopener noreferrer">
+            Chat Support
         </a>
 
     </section>
 
 
-    <!-- REFERRAL -->
+    <!-- REFERRAL PROMOTION -->
 
-    <section class="referral-mini">
+    <section class="cm-referral">
 
-        <div class="referral-mini-icon">
-            <i class="bi bi-gift-fill"></i>
-        </div>
+        <div class="cm-referral-content">
 
-        <div>
-
-            <span>REFERRAL PROGRAM</span>
+            <span class="cm-referral-label">
+                <i class="bi bi-gift-fill"></i>
+                REFERRAL PROGRAM
+            </span>
 
             <h2>
-                Earn ₦60 per eligible referral
+                Earn ₦60 per eligible referral 🎁
             </h2>
 
             <p>
-                Your referral earns ₦50 after completing
-                2 approved tasks.
+                Invite friends to Chop Money and earn ₦60
+                when your referral completes the required
+                approved tasks.
             </p>
 
-        </div>
+            <a href="/referrals" class="cm-referral-btn">
+                View My Referrals
+                <i class="bi bi-arrow-right"></i>
+            </a>
 
-        <a href="/referrals" class="white-btn">
-            View Referrals
-            <i class="bi bi-arrow-right"></i>
-        </a>
+        </div>
 
     </section>
 

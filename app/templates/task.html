@@ -52,13 +52,74 @@
 
         <h1>{{ task.title }}</h1>
 
-        <div class="task-detail-reward">
+        <div class="task-stats">
 
-            <span>Task Reward</span>
+            <div class="task-stat reward-stat">
+                <div class="task-stat-icon">
+                    <i class="bi bi-cash-stack"></i>
+                </div>
 
-            <strong>
-                ₦{{ "{:,.2f}".format(task.reward) }}
-            </strong>
+                <div>
+                    <span>Task Reward</span>
+                    <strong>₦{{ "{:,.2f}".format(task.reward) }}</strong>
+                    <small>Per approved worker</small>
+                </div>
+            </div>
+
+            <div class="task-stat workers-stat">
+                <div class="task-stat-icon">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+
+                <div>
+                    <span>Workers Remaining</span>
+                    <strong>{{ task.workers_remaining }}</strong>
+                    <small>Slots still available</small>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="workers-progress-card">
+
+            <div class="workers-progress-top">
+
+                <div>
+                    <strong>Task Progress</strong>
+                    <span>
+                        {{ task.workers_needed - task.workers_remaining }}
+                        of {{ task.workers_needed }} workers completed
+                    </span>
+                </div>
+
+                <strong>
+                    {{ ((task.workers_needed - task.workers_remaining) / task.workers_needed * 100) | round(0) | int }}%
+                </strong>
+
+            </div>
+
+            <div class="workers-progress-bar">
+                <div
+                    class="workers-progress-fill"
+                    style="width: {{ ((task.workers_needed - task.workers_remaining) / task.workers_needed * 100) | round(0) | int }}%;">
+                </div>
+            </div>
+
+            {% if task.workers_remaining > 0 %}
+
+                <div class="workers-available">
+                    <i class="bi bi-check-circle-fill"></i>
+                    {{ task.workers_remaining }} worker{% if task.workers_remaining != 1 %}s{% endif %} still needed
+                </div>
+
+            {% else %}
+
+                <div class="workers-full">
+                    <i class="bi bi-check-circle-fill"></i>
+                    All worker slots have been filled
+                </div>
+
+            {% endif %}
 
         </div>
 

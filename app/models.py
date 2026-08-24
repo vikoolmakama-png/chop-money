@@ -74,6 +74,7 @@ class TaskSubmission(db.Model):
 
     note = db.Column(db.Text, nullable=False)
     screenshot_filename = db.Column(db.String(255), nullable=True)
+    screenshot_url = db.Column(db.String(1000), nullable=True)
     screenshot_data = db.Column(db.LargeBinary, nullable=True)
 
     status = db.Column(db.String(20), default="pending")

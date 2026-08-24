@@ -2845,3 +2845,702 @@ html {
     }
 }
 
+
+/* =========================================================
+   CHOP MONEY — MODERN USER DASHBOARD
+   UI ONLY — NO BALANCE/BACKEND CHANGES
+   ========================================================= */
+
+.dashboard-container {
+    max-width: 1180px;
+    padding: 28px 18px 70px;
+}
+
+.dashboard-welcome {
+    position: relative;
+    overflow: hidden;
+    padding: 28px;
+    margin-bottom: 22px;
+    border-radius: 26px;
+    background: linear-gradient(135deg, #0f5fe8, #1748b8);
+    color: #fff;
+    box-shadow: 0 18px 45px rgba(23, 105, 224, .20);
+}
+
+.dashboard-welcome::after {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    right: -60px;
+    top: -70px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.10);
+}
+
+.dashboard-welcome span {
+    position: relative;
+    z-index: 1;
+    color: #dceaff;
+}
+
+.dashboard-welcome h1 {
+    position: relative;
+    z-index: 1;
+    margin: 8px 0;
+    font-size: clamp(27px, 5vw, 39px);
+    color: #fff;
+}
+
+.dashboard-welcome p {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    color: #dceaff;
+}
+
+/* BALANCE CARDS */
+
+.balance-grid {
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.balance-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(20, 70, 130, .08);
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: 0 12px 32px rgba(20, 55, 100, .07);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.balance-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 38px rgba(20, 55, 100, .11);
+}
+
+.main-balance {
+    background: linear-gradient(135deg, #1769ff, #063fae);
+}
+
+.balance-card strong {
+    display: block;
+    margin: 12px 0 5px;
+    font-size: clamp(25px, 5vw, 34px);
+    letter-spacing: -.5px;
+}
+
+.balance-card small {
+    display: block;
+    line-height: 1.4;
+}
+
+/* QUICK ACTIONS */
+
+.quick-actions {
+    gap: 12px;
+    margin: 18px 0 28px;
+}
+
+.quick-action {
+    position: relative;
+    overflow: hidden;
+    border-radius: 19px;
+    padding: 17px;
+    min-height: 72px;
+    box-shadow: 0 8px 24px rgba(20, 55, 100, .05);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.quick-action:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(20, 55, 100, .10);
+}
+
+.quick-action > i {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    background: #eef5ff;
+    color: #1769e0;
+}
+
+.quick-action strong {
+    font-size: 15px;
+}
+
+.quick-action small {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+}
+
+/* TASK / SUPPORT CARDS */
+
+.dashboard-action-cards {
+    gap: 12px;
+    margin-bottom: 13px;
+}
+
+.dashboard-action-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #e6edf7;
+    border-radius: 20px;
+    padding: 17px;
+    background: #fff;
+    box-shadow: 0 8px 25px rgba(20, 55, 100, .055);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.dashboard-action-card:hover {
+    transform: translateY(-3px);
+    border-color: #bcd4f7;
+    box-shadow: 0 15px 32px rgba(20, 55, 100, .10);
+}
+
+.dashboard-action-icon {
+    border-radius: 15px;
+    background: linear-gradient(135deg, #eaf3ff, #dceaff);
+    color: #1769e0;
+}
+
+.dashboard-action-content strong {
+    font-size: 16px;
+}
+
+.dashboard-action-content span {
+    color: #667085;
+    line-height: 1.4;
+}
+
+/* TELEGRAM SUPPORT */
+
+.dashboard-action-card[href*="t.me"] {
+    border-color: #cfe2ff;
+    background: linear-gradient(135deg, #fafdff, #eef6ff);
+}
+
+.dashboard-action-card[href*="t.me"] .dashboard-action-icon {
+    background: #e5f2ff;
+    color: #168de2;
+}
+
+/* REFERRAL */
+
+.referral-mini {
+    position: relative;
+    overflow: hidden;
+    margin-top: 20px;
+    padding: 25px;
+    border-radius: 25px;
+    box-shadow: 0 18px 42px rgba(23, 105, 224, .18);
+}
+
+.referral-mini::after {
+    content: "";
+    position: absolute;
+    width: 170px;
+    height: 170px;
+    right: -70px;
+    bottom: -90px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.10);
+}
+
+.referral-mini-icon {
+    position: relative;
+    z-index: 1;
+}
+
+.referral-mini h2,
+.referral-mini p,
+.referral-mini span,
+.referral-mini .white-btn {
+    position: relative;
+    z-index: 1;
+}
+
+.referral-mini h2 {
+    font-size: clamp(19px, 4vw, 25px);
+}
+
+.referral-mini p {
+    max-width: 580px;
+}
+
+.referral-mini .white-btn {
+    border-radius: 13px;
+    font-weight: 800;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .dashboard-container {
+        padding: 18px 13px 45px;
+    }
+
+    .dashboard-welcome {
+        padding: 23px 20px;
+        border-radius: 22px;
+    }
+
+    .dashboard-welcome h1 {
+        font-size: 27px;
+    }
+
+    .balance-card {
+        border-radius: 19px;
+        padding: 19px;
+    }
+
+    .balance-card strong {
+        font-size: 28px;
+    }
+
+    .quick-action {
+        min-height: 68px;
+    }
+
+    .dashboard-action-card {
+        border-radius: 18px;
+        padding: 15px;
+    }
+
+    .referral-mini {
+        border-radius: 21px;
+        padding: 21px;
+    }
+}
+
+
+/* =========================================================
+   CHOP MONEY — MODERN USER DASHBOARD
+   UI ONLY — NO BALANCE/BACKEND CHANGES
+   ========================================================= */
+
+.dashboard-container {
+    max-width: 1180px;
+    padding: 28px 18px 70px;
+}
+
+.dashboard-welcome {
+    position: relative;
+    overflow: hidden;
+    padding: 28px;
+    margin-bottom: 22px;
+    border-radius: 26px;
+    background: linear-gradient(135deg, #0f5fe8, #1748b8);
+    color: #fff;
+    box-shadow: 0 18px 45px rgba(23, 105, 224, .20);
+}
+
+.dashboard-welcome::after {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    right: -60px;
+    top: -70px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.10);
+}
+
+.dashboard-welcome span {
+    position: relative;
+    z-index: 1;
+    color: #dceaff;
+}
+
+.dashboard-welcome h1 {
+    position: relative;
+    z-index: 1;
+    margin: 8px 0;
+    font-size: clamp(27px, 5vw, 39px);
+    color: #fff;
+}
+
+.dashboard-welcome p {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    color: #dceaff;
+}
+
+/* BALANCE CARDS */
+
+.balance-grid {
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.balance-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(20, 70, 130, .08);
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: 0 12px 32px rgba(20, 55, 100, .07);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.balance-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 38px rgba(20, 55, 100, .11);
+}
+
+.main-balance {
+    background: linear-gradient(135deg, #1769ff, #063fae);
+}
+
+.balance-card strong {
+    display: block;
+    margin: 12px 0 5px;
+    font-size: clamp(25px, 5vw, 34px);
+    letter-spacing: -.5px;
+}
+
+.balance-card small {
+    display: block;
+    line-height: 1.4;
+}
+
+/* QUICK ACTIONS */
+
+.quick-actions {
+    gap: 12px;
+    margin: 18px 0 28px;
+}
+
+.quick-action {
+    position: relative;
+    overflow: hidden;
+    border-radius: 19px;
+    padding: 17px;
+    min-height: 72px;
+    box-shadow: 0 8px 24px rgba(20, 55, 100, .05);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.quick-action:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(20, 55, 100, .10);
+}
+
+.quick-action > i {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    background: #eef5ff;
+    color: #1769e0;
+}
+
+.quick-action strong {
+    font-size: 15px;
+}
+
+.quick-action small {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+}
+
+/* TASK / SUPPORT CARDS */
+
+.dashboard-action-cards {
+    gap: 12px;
+    margin-bottom: 13px;
+}
+
+.dashboard-action-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #e6edf7;
+    border-radius: 20px;
+    padding: 17px;
+    background: #fff;
+    box-shadow: 0 8px 25px rgba(20, 55, 100, .055);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.dashboard-action-card:hover {
+    transform: translateY(-3px);
+    border-color: #bcd4f7;
+    box-shadow: 0 15px 32px rgba(20, 55, 100, .10);
+}
+
+.dashboard-action-icon {
+    border-radius: 15px;
+    background: linear-gradient(135deg, #eaf3ff, #dceaff);
+    color: #1769e0;
+}
+
+.dashboard-action-content strong {
+    font-size: 16px;
+}
+
+.dashboard-action-content span {
+    color: #667085;
+    line-height: 1.4;
+}
+
+/* TELEGRAM SUPPORT */
+
+.dashboard-action-card[href*="t.me"] {
+    border-color: #cfe2ff;
+    background: linear-gradient(135deg, #fafdff, #eef6ff);
+}
+
+.dashboard-action-card[href*="t.me"] .dashboard-action-icon {
+    background: #e5f2ff;
+    color: #168de2;
+}
+
+/* REFERRAL */
+
+.referral-mini {
+    position: relative;
+    overflow: hidden;
+    margin-top: 20px;
+    padding: 25px;
+    border-radius: 25px;
+    box-shadow: 0 18px 42px rgba(23, 105, 224, .18);
+}
+
+.referral-mini::after {
+    content: "";
+    position: absolute;
+    width: 170px;
+    height: 170px;
+    right: -70px;
+    bottom: -90px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.10);
+}
+
+.referral-mini-icon {
+    position: relative;
+    z-index: 1;
+}
+
+.referral-mini h2,
+.referral-mini p,
+.referral-mini span,
+.referral-mini .white-btn {
+    position: relative;
+    z-index: 1;
+}
+
+.referral-mini h2 {
+    font-size: clamp(19px, 4vw, 25px);
+}
+
+.referral-mini p {
+    max-width: 580px;
+}
+
+.referral-mini .white-btn {
+    border-radius: 13px;
+    font-weight: 800;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .dashboard-container {
+        padding: 18px 13px 45px;
+    }
+
+    .dashboard-welcome {
+        padding: 23px 20px;
+        border-radius: 22px;
+    }
+
+    .dashboard-welcome h1 {
+        font-size: 27px;
+    }
+
+    .balance-card {
+        border-radius: 19px;
+        padding: 19px;
+    }
+
+    .balance-card strong {
+        font-size: 28px;
+    }
+
+    .quick-action {
+        min-height: 68px;
+    }
+
+    .dashboard-action-card {
+        border-radius: 18px;
+        padding: 15px;
+    }
+
+    .referral-mini {
+        border-radius: 21px;
+        padding: 21px;
+    }
+}
+
+
+/* =========================================================
+   TASK PAGE — WORKER STATS REDESIGN
+   ========================================================= */
+
+.task-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 22px 0 16px;
+}
+
+.task-stat {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px;
+    border: 1px solid #e5eaf2;
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 8px 25px rgba(20, 33, 61, 0.06);
+}
+
+.task-stat-icon {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    background: #eef4ff;
+    color: #1769e0;
+    font-size: 21px;
+}
+
+.task-stat span {
+    display: block;
+    color: #667085;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+
+.task-stat strong {
+    display: block;
+    color: #14213d;
+    font-size: 24px;
+    font-weight: 850;
+    line-height: 1.15;
+}
+
+.task-stat small {
+    display: block;
+    margin-top: 4px;
+    color: #98a2b3;
+    font-size: 12px;
+}
+
+.workers-stat {
+    background: linear-gradient(145deg, #f8fbff, #ffffff);
+}
+
+.workers-stat .task-stat-icon {
+    background: #e9f8f1;
+    color: #159957;
+}
+
+.workers-progress-card {
+    padding: 20px;
+    margin-bottom: 25px;
+    border: 1px solid #e5eaf2;
+    border-radius: 20px;
+    background: linear-gradient(145deg, #f8faff, #ffffff);
+}
+
+.workers-progress-top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 12px;
+}
+
+.workers-progress-top strong {
+    display: block;
+    color: #14213d;
+    font-size: 16px;
+}
+
+.workers-progress-top span {
+    display: block;
+    margin-top: 4px;
+    color: #667085;
+    font-size: 13px;
+}
+
+.workers-progress-top > strong:last-child {
+    color: #1769e0;
+    font-size: 18px;
+}
+
+.workers-progress-bar {
+    width: 100%;
+    height: 10px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e8edf5;
+}
+
+.workers-progress-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #1769ff, #4f8cff);
+    transition: width .3s ease;
+}
+
+.workers-available,
+.workers-full {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.workers-available {
+    color: #159957;
+}
+
+.workers-full {
+    color: #d64545;
+}
+
+@media (max-width: 600px) {
+    .task-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .workers-progress-card {
+        padding: 17px;
+    }
+}
+

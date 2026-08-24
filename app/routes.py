@@ -1,9 +1,18 @@
 from urllib.parse import urlparse
 import secrets
+import os
+import cloudinary
+import cloudinary.uploader
+
+
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET")
+)
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from werkzeug.utils import secure_filename
-import os
 from flask_login import (
     login_user,
     logout_user,
@@ -300,7 +309,7 @@ def submission_screenshot(submission_id):
 
     submission = db.session.get(TaskSubmission, submission_id)
 
-    if not submission or not submission.screenshot_data:
+    if not submission:
         abort(404)
 
     if (
@@ -308,6 +317,14 @@ def submission_screenshot(submission_id):
         and not current_user.is_admin
     ):
         abort(403)
+
+    # New submissions use Cloudinary.
+    if submission.screenshot_url:
+        return redirect(submission.screenshot_url)
+
+    # Existing submissions remain supported through the old database storage.
+    if not submission.screenshot_data:
+        abort(404)
 
     filename = submission.screenshot_filename or "screenshot.jpg"
     extension = filename.rsplit(".", 1)[-1].lower() if "." in filename else "jpg"
@@ -466,6 +483,28 @@ def task_detail(task_id):
                 url_for("main.task_detail", task_id=task.id)
             )
 
+        try:
+            upload_result = cloudinary.uploader.upload(
+                screenshot_data,
+                folder="chop_money/submissions",
+                resource_type="image"
+            )
+
+            screenshot_url = upload_result.get("secure_url")
+
+            if not screenshot_url:
+                raise RuntimeError("Cloudinary did not return an image URL.")
+
+        except Exception as e:
+            print("Cloudinary upload failed:", type(e).__name__, str(e))
+            flash(
+                "Could not upload your screenshot. Please try again.",
+                "error"
+            )
+            return redirect(
+                url_for("main.task_detail", task_id=task.id)
+            )
+
 
         if not note:
             flash("Please enter your completion note.", "error")
@@ -482,6 +521,7 @@ def task_detail(task_id):
         if existing and existing.status == "rejected":
             existing.note = note
             existing.screenshot_filename = screenshot_filename
+            existing.screenshot_url = screenshot_url
             existing.screenshot_data = screenshot_data
             existing.status = "pending"
             existing.rejection_reason = None
@@ -509,6 +549,7 @@ def task_detail(task_id):
                 task_id=task.id,
                 note=note,
                 screenshot_filename=screenshot_filename,
+                screenshot_url=screenshot_url,
                 screenshot_data=screenshot_data,
                 status="pending"
             )
