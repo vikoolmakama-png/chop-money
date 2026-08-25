@@ -172,7 +172,7 @@
                                 {{ submission.note }}
                             </div>
 
-                            {% if submission.screenshot_filename %}
+                            {% if submission.screenshot_url or submission.screenshot_filename %}
                                 <div style="margin-bottom:15px;">
                                     <strong>Screenshot Proof:</strong>
 
