@@ -21,7 +21,7 @@ from flask_login import (
 )
 
 from app import db
-from app.models import User, Task, TaskSubmission, Referral, Withdrawal, AirtimePurchase, AirtimePurchase, Deposit
+from app.models import User, Task, TaskSubmission, Referral, Withdrawal, AirtimePurchase, Deposit, Notification
 
 
 main = Blueprint("main", __name__)
@@ -382,6 +382,20 @@ def logout():
     flash("You have been logged out.", "success")
 
     return redirect(url_for("main.home"))
+
+
+@main.route("/notifications")
+@login_required
+def notifications():
+
+    notifications = Notification.query.order_by(
+        Notification.created_at.desc()
+    ).all()
+
+    return render_template(
+        "notifications.html",
+        notifications=notifications
+    )
 
 
 @main.route("/dashboard")

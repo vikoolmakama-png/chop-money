@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 
 from app import db
-from app.models import User, Task, TaskSubmission, Referral, Withdrawal, AirtimePurchase, Deposit
+from app.models import User, Task, TaskSubmission, Referral, Withdrawal, AirtimePurchase, Deposit, Notification
 
 
 admin = Blueprint("admin", __name__, url_prefix="/admin")
@@ -63,6 +63,38 @@ def dashboard():
         withdrawals=withdrawals,
         airtime_requests=airtime_requests,
         deposits=deposits
+    )
+
+
+@admin.route("/notifications", methods=["GET", "POST"])
+def notifications():
+
+    if request.method == "POST":
+        title = request.form.get("title", "").strip()
+        message = request.form.get("message", "").strip()
+
+        if not title or not message:
+            flash("Enter both a notification title and message.", "error")
+            return redirect(url_for("admin.notifications"))
+
+        notification = Notification(
+            title=title,
+            message=message
+        )
+
+        db.session.add(notification)
+        db.session.commit()
+
+        flash("Notification sent to all users.", "success")
+        return redirect(url_for("admin.notifications"))
+
+    notifications = Notification.query.order_by(
+        Notification.created_at.desc()
+    ).all()
+
+    return render_template(
+        "admin/notifications.html",
+        notifications=notifications
     )
 
 

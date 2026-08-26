@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications — Chop Money</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<header class="dashboard-nav">
+
+    <a href="{{ url_for('main.dashboard') }}" class="brand">
+        <div class="brand-icon">
+            <i class="bi bi-wallet2"></i>
+        </div>
+
+        <span>Chop<span>Money</span></span>
+    </a>
+
+    <a href="{{ url_for('main.dashboard') }}" class="login-btn">
+        Dashboard
+    </a>
+
+</header>
+
+<main>
+
+<section style="
+    max-width:900px;
+    margin:0 auto;
+    padding:30px 16px 70px;
+">
+
+    <div style="
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:15px;
+        margin-bottom:22px;
+    ">
+
+        <div>
+            <span style="
+                color:#1769e0;
+                font-size:11px;
+                font-weight:800;
+                letter-spacing:1px;
+            ">
+                NOTIFICATION CENTER
+            </span>
+
+            <h1 style="
+                margin:5px 0 0;
+                color:#14213d;
+            ">
+                Notifications
+            </h1>
+        </div>
+
+        <div style="
+            width:52px;
+            height:52px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            border-radius:16px;
+            background:#eef5ff;
+            color:#1769e0;
+            font-size:22px;
+        ">
+            <i class="bi bi-bell-fill"></i>
+        </div>
+
+    </div>
+
+
+    {% if notifications %}
+
+        {% for notification in notifications %}
+
+            <article style="
+                background:#fff;
+                border:1px solid #e7edf6;
+                border-radius:20px;
+                padding:20px;
+                margin-bottom:14px;
+                box-shadow:0 8px 25px rgba(20,55,100,.06);
+            ">
+
+                <div style="
+                    display:flex;
+                    align-items:flex-start;
+                    gap:14px;
+                ">
+
+                    <div style="
+                        flex:0 0 42px;
+                        width:42px;
+                        height:42px;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        border-radius:13px;
+                        background:#eef5ff;
+                        color:#1769e0;
+                    ">
+                        <i class="bi bi-megaphone-fill"></i>
+                    </div>
+
+                    <div style="min-width:0;">
+
+                        <h2 style="
+                            margin:0 0 7px;
+                            color:#14213d;
+                            font-size:18px;
+                        ">
+                            {{ notification.title }}
+                        </h2>
+
+                        <p style="
+                            margin:0;
+                            color:#667085;
+                            line-height:1.6;
+                            white-space:pre-wrap;
+                        ">
+                            {{ notification.message }}
+                        </p>
+
+                        <small style="
+                            display:block;
+                            margin-top:12px;
+                            color:#98a2b3;
+                        ">
+                            <i class="bi bi-clock"></i>
+                            {{ notification.created_at.strftime("%d %b %Y, %I:%M %p") }}
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div style="
+            background:#fff;
+            border:1px solid #e7edf6;
+            border-radius:20px;
+            padding:45px 20px;
+            text-align:center;
+        ">
+
+            <i class="bi bi-bell-slash"
+               style="
+                   font-size:42px;
+                   color:#98a2b3;
+               "></i>
+
+            <h2 style="color:#14213d;">
+                No notifications yet
+            </h2>
+
+            <p style="color:#98a2b3;">
+                You'll see announcements from Chop Money here.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+</main>
+
+</body>
+</html>

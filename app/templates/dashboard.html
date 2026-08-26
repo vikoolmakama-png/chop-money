@@ -557,6 +557,54 @@
 
 <main class="cm-dashboard">
 
+    <a href="/notifications" style="
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:12px;
+        margin-bottom:18px;
+        padding:16px 18px;
+        border-radius:18px;
+        background:#fff;
+        border:1px solid #e7edf6;
+        color:#14213d;
+        text-decoration:none;
+        box-shadow:0 8px 25px rgba(20,55,100,.06);
+    ">
+        <span style="
+            display:flex;
+            align-items:center;
+            gap:12px;
+            font-weight:800;
+        ">
+            <span style="
+                width:44px;
+                height:44px;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                border-radius:13px;
+                background:#eef5ff;
+                color:#1769e0;
+                font-size:19px;
+            ">
+                <i class="bi bi-bell-fill"></i>
+            </span>
+
+            <span>
+                <strong style="display:block;">Notifications</strong>
+                <small style="color:#98a2b3;font-weight:500;">
+                    View announcements from Chop Money
+                </small>
+            </span>
+        </span>
+
+        <i class="bi bi-chevron-right"
+           style="color:#98a2b3;"></i>
+    </a>
+
+
+
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <div class="cm-flashes">
